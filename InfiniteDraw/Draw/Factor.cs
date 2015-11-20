@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw
 {
-    public class Factor : Drawable
+    public class Factor : IDrawable
     {
-        private List<Drawable> elements = new List<Drawable>();
+        private List<RefElement> elements = new List<RefElement>();
 
         public int MaxDepth { set; get; }
         public string Name { set; get; }
@@ -23,15 +23,30 @@ namespace InfiniteDraw.Draw
             Name = "New Factor " + cc++;
         }
 
-        protected override Bitmap Draw(int depth)
+        public Bitmap Draw(int depth)
         {
+            if (depth > MaxDepth)
+                return null;
             Rectangle size = MeasureSize();
+            if (size.Width == 0)
+                size.Width = 100;
+            if (size.Height == 0)
+                size.Height = 100;
             Bitmap bmp = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(bmp);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.DrawLine(Pens.Black, Point.Empty, new Point(size.Size));
+            g.DrawLine(Pens.Black, new Point(size.Width, 0), new Point(0, size.Height));
+            foreach (var e in elements)
+            {
+                Bitmap sbmp = e.Draw(depth + 1);
+                if (sbmp != null)
+                    g.DrawImage(sbmp, Point.Empty);
+            }
             return bmp;
         }
 
-        public override Rectangle MeasureSize()
+        public Rectangle MeasureSize()
         {
             Rectangle size = new Rectangle(0, 0, 0, 0);
             foreach (var d in elements)
@@ -39,9 +54,9 @@ namespace InfiniteDraw.Draw
             return size;
         }
 
-        public void AddElement(Drawable e)
+        public void AddElement(RefElement re)
         {
-
+            elements.Add(re);
         }
 
         public override string ToString()

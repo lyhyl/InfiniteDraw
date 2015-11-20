@@ -1,6 +1,6 @@
 ﻿namespace InfiniteDraw.WorkForm
 {
-    partial class FactorListForm
+    partial class ElementListForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@
             this.listBox = new System.Windows.Forms.ListBox();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.newFactorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteFactorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteElementToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -52,31 +52,35 @@
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newFactorToolStripMenuItem,
-            this.deleteFactorToolStripMenuItem});
+            this.deleteElementToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(153, 70);
+            this.contextMenuStrip.Size = new System.Drawing.Size(154, 48);
             // 
             // newFactorToolStripMenuItem
             // 
             this.newFactorToolStripMenuItem.Name = "newFactorToolStripMenuItem";
-            this.newFactorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newFactorToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.newFactorToolStripMenuItem.Text = "New Factor";
             this.newFactorToolStripMenuItem.Click += new System.EventHandler(this.newFactorToolStripMenuItem_Click);
             // 
-            // deleteFactorToolStripMenuItem
+            // deleteElementToolStripMenuItem
             // 
-            this.deleteFactorToolStripMenuItem.Name = "deleteFactorToolStripMenuItem";
-            this.deleteFactorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.deleteFactorToolStripMenuItem.Text = "Delete Factor";
-            this.deleteFactorToolStripMenuItem.Click += new System.EventHandler(this.deleteFactorToolStripMenuItem_Click);
+            this.deleteElementToolStripMenuItem.Name = "deleteElementToolStripMenuItem";
+            this.deleteElementToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.deleteElementToolStripMenuItem.Text = "Delete Element";
+            this.deleteElementToolStripMenuItem.Click += new System.EventHandler(this.deleteElementToolStripMenuItem_Click);
             // 
-            // FactorListForm
+            // ElementListForm
             // 
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.listBox);
+            this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)(((((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.DockLeft) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockRight) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockTop) 
+            | WeifenLuo.WinFormsUI.Docking.DockAreas.DockBottom)));
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.Name = "FactorListForm";
-            this.Text = "Factor List";
+            this.Name = "ElementListForm";
+            this.Text = "Element List";
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -87,6 +91,6 @@
         private System.Windows.Forms.ListBox listBox;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem newFactorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem deleteFactorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteElementToolStripMenuItem;
     }
 }

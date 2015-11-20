@@ -33,7 +33,7 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.factorListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.elementListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolboxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainDockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
@@ -63,40 +63,46 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.factorListToolStripMenuItem,
+            this.elementListToolStripMenuItem,
             this.toolboxToolStripMenuItem,
             this.propertyToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
             // 
-            // factorListToolStripMenuItem
+            // elementListToolStripMenuItem
             // 
-            this.factorListToolStripMenuItem.Name = "factorListToolStripMenuItem";
-            this.factorListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.factorListToolStripMenuItem.Text = "&Factor List";
-            this.factorListToolStripMenuItem.Click += new System.EventHandler(this.factorListToolStripMenuItem_Click);
+            this.elementListToolStripMenuItem.Checked = true;
+            this.elementListToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.elementListToolStripMenuItem.Name = "elementListToolStripMenuItem";
+            this.elementListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.elementListToolStripMenuItem.Text = "&Element List";
+            this.elementListToolStripMenuItem.Click += new System.EventHandler(this.factorListToolStripMenuItem_Click);
             // 
             // toolboxToolStripMenuItem
             // 
+            this.toolboxToolStripMenuItem.Checked = true;
+            this.toolboxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolboxToolStripMenuItem.Name = "toolboxToolStripMenuItem";
             this.toolboxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.toolboxToolStripMenuItem.Text = "&Toolbox";
             // 
             // propertyToolStripMenuItem
             // 
+            this.propertyToolStripMenuItem.Checked = true;
+            this.propertyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
             this.propertyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.propertyToolStripMenuItem.Text = "&Property";
@@ -135,7 +141,7 @@
         private WeifenLuo.WinFormsUI.Docking.DockPanel mainDockPanel;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem factorListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem elementListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolboxToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem propertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;

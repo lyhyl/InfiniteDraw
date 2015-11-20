@@ -15,7 +15,7 @@ namespace InfiniteDraw
 {
     public partial class InfiniteDraw : Form
     {
-        private FactorListForm factorListForm = null;
+        private ElementListForm factorListForm = null;
         private PropertyForm propertyForm = null;
         private DrawForms drawForms = null;
 
@@ -33,22 +33,22 @@ namespace InfiniteDraw
 
         private void InitializeForm()
         {
-            factorListForm = new FactorListForm(factors);
+            factorListForm = new ElementListForm(elements);
             propertyForm = new PropertyForm();
-            drawForms = new DrawForms(factors, mainDockPanel);
+            drawForms = new DrawForms(elements, mainDockPanel);
 
             factorListForm.Show(mainDockPanel, DockState.DockRight);
             propertyForm.Show(mainDockPanel.ActivePane, DockAlignment.Bottom, .5);
 
-            factorListToolStripMenuItem.Checked = true;
+            elementListToolStripMenuItem.Checked = true;
             propertyToolStripMenuItem.Checked = true;
         }
 
         private void factorListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            bool state = factorListToolStripMenuItem.Checked;
+            bool state = elementListToolStripMenuItem.Checked;
             state = !state;
-            factorListToolStripMenuItem.Checked = state;
+            elementListToolStripMenuItem.Checked = state;
             if (state)
                 factorListForm.Show();
             else

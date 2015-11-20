@@ -11,38 +11,38 @@ namespace InfiniteDraw.WorkForm
 {
     public class DrawForms
     {
-        private Dictionary<Factor, DrawForm> forms = new Dictionary<Factor, DrawForm>();
-        private FactorStorage factors;
+        private Dictionary<IDrawable, DrawForm> forms = new Dictionary<IDrawable, DrawForm>();
+        private ElementStorage elements;
         private DockPanel panel;
 
-        public DrawForms(FactorStorage fs, DockPanel dp)
+        public DrawForms(ElementStorage es, DockPanel dp)
         {
-            factors = fs;
+            elements = es;
             panel = dp;
             
-            factors.FactorRemoved += Factors_FactorRemoved;
-            factors.FactorActived += Factors_FactorActived;
+            elements.ElementRemoved += Factors_FactorRemoved;
+            elements.RequestEditElement += Factors_FactorActived;
         }
 
-        private void Factors_FactorActived(object sender, FactorEventArgs e)
+        private void Factors_FactorActived(object sender, ElementEventArgs e)
         {
-            if (!forms.ContainsKey(e.Factor))
+            if (!forms.ContainsKey(e.Drawable))
             {
-                DrawForm drawForm = new DrawForm(e.Factor);
-                drawForm.FormClosed += (s, a) => { forms.Remove(e.Factor); };
-                forms[e.Factor] = drawForm;
+                DrawForm drawForm = new DrawForm(e.Drawable);
+                drawForm.FormClosed += (s, a) => { forms.Remove(e.Drawable); };
+                forms[e.Drawable] = drawForm;
                 drawForm.Show(panel);
             }
             else
-                forms[e.Factor].Focus();
+                forms[e.Drawable].Focus();
         }
 
-        private void Factors_FactorRemoved(object sender, FactorEventArgs e)
+        private void Factors_FactorRemoved(object sender, ElementEventArgs e)
         {
-            if (forms.ContainsKey(e.Factor))
+            if (forms.ContainsKey(e.Drawable))
             {
-                forms[e.Factor].Close();
-                forms.Remove(e.Factor);
+                forms[e.Drawable].Close();
+                forms.Remove(e.Drawable);
             }
         }
     }

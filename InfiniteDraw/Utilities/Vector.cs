@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Drawing;
 
-namespace InfiniteDraw.Utils
+namespace InfiniteDraw.Utilities
 {
     public struct Vector
     {

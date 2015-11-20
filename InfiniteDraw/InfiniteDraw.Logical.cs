@@ -9,6 +9,6 @@ namespace InfiniteDraw
 {
     partial class InfiniteDraw
     {
-        FactorStorage factors = new FactorStorage();
+        ElementStorage elements = new ElementStorage();
     }
 }
