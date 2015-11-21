@@ -21,7 +21,7 @@ namespace InfiniteDraw.Utilities
             return 3 * it * it * (b - a) + 6 * it * t * (c - b) + 3 * t * t * (d - c);
         }
 
-        public static PointF[] Div(Vector a, Vector b, Vector c, Vector d, int prec)
+        public static PointF[] Divide(Vector a, Vector b, Vector c, Vector d, int prec)
         {
             PointF[] points = new PointF[prec + 1];
             points[0] = a.ToPointF();

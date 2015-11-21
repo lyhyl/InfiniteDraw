@@ -11,25 +11,23 @@ namespace InfiniteDraw.WorkForm
 {
     public partial class DrawForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
-        public IDrawable Drawable { private set; get; }
+        public Drawable Drawable { private set; get; }
 
-        public DrawForm(IDrawable d)
+        public DrawForm(Drawable d)
         {
             InitializeComponent();
             InitializeFactor(d);
         }
 
-        private void InitializeFactor(IDrawable d)
+        private void InitializeFactor(Drawable d)
         {
             Drawable = d;
-            Text = d.Name;
+            Text = d.ToString();
         }
 
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
-
-
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -37,8 +35,8 @@ namespace InfiniteDraw.WorkForm
             base.OnPaint(e);
 
             Bitmap bmp = Drawable.Draw(0);
-
-            e.Graphics.DrawImage(bmp, Point.Empty);
+            if (bmp != null)
+                e.Graphics.DrawImage(bmp, Point.Empty);
         }
     }
 }

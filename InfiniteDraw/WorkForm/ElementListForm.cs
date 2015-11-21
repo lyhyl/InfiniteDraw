@@ -19,18 +19,20 @@ namespace InfiniteDraw.WorkForm
             InitializeComponent();
 
             elements = es;
-            elements.ElementAdded += Factors_FactorCreated;
-            elements.ElementRemoved += Factors_FactorRemoved;
+            elements.ElementCreated += ElementStorage_ElementCreated;
+            elements.ElementDeleted += ElementStorage_ElementDeleted;
         }
 
-        private void Factors_FactorRemoved(object sender, ElementEventArgs e)
+        private void ElementStorage_ElementDeleted(object sender, ElementEventArgs e)
         {
-            listBox.Items.Remove(e.Drawable);
+            if (!(e.Drawable is RefElement))
+                listBox.Items.Remove(e.Drawable);
         }
 
-        private void Factors_FactorCreated(object sender, ElementEventArgs e)
+        private void ElementStorage_ElementCreated(object sender, ElementEventArgs e)
         {
-            listBox.Items.Add(e.Drawable);
+            if (!(e.Drawable is RefElement))
+                listBox.Items.Add(e.Drawable);
         }
 
         public void Reset()
@@ -41,20 +43,22 @@ namespace InfiniteDraw.WorkForm
         private void newFactorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Factor f = elements[elements.CreateFactor()] as Factor;
-            f.AddElement(new RefElement(elements, elements.CreateBezier()));
-            elements.Add(f);
+            f.AddElement(elements.CreateRefElement(elements.CreateBezier()));
+            RefElement re = elements.CreateRefElement(f.GID);
+            re.BaseTransform = Vector.YAxis * .7;
+            f.AddElement(re);
         }
 
         private void deleteElementToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            elements.Remove(listBox.SelectedItem as IDrawable);
+            elements.Delete(listBox.SelectedItem as Drawable);
         }
 
         private void listBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = listBox.IndexFromPoint(e.Location);
             if (index != ListBox.NoMatches)
-                elements.RequestEdit(listBox.SelectedItem as IDrawable);
+                elements.RequestEdit(listBox.SelectedItem as Drawable);
         }
 
         private void listBox_MouseDown(object sender, MouseEventArgs e)

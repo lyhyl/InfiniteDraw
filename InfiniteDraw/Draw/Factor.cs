@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -8,49 +9,46 @@ using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw
 {
-    public class Factor : IDrawable
+    public class Factor : Drawable
     {
         private List<RefElement> elements = new List<RefElement>();
 
         public int MaxDepth { set; get; }
-        public string Name { set; get; }
-
-        private static int cc = 1;
 
         public Factor()
         {
-            MaxDepth = 8;
-            Name = "New Factor " + cc++;
+            MaxDepth = 3;
         }
 
-        public Bitmap Draw(int depth)
+        public override Bitmap Draw(int depth)
         {
             if (depth > MaxDepth)
                 return null;
-            Rectangle size = MeasureSize();
-            if (size.Width == 0)
-                size.Width = 100;
-            if (size.Height == 0)
-                size.Height = 100;
+            Rectangle size = MeasureSize(depth);
+            if (size.Width == 0 || size.Height == 0)
+                return null;
             Bitmap bmp = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
             Graphics g = Graphics.FromImage(bmp);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            g.DrawLine(Pens.Black, Point.Empty, new Point(size.Size));
-            g.DrawLine(Pens.Black, new Point(size.Width, 0), new Point(0, size.Height));
+            g.SmoothingMode = SmoothingMode.HighQuality;
             foreach (var e in elements)
             {
                 Bitmap sbmp = e.Draw(depth + 1);
                 if (sbmp != null)
-                    g.DrawImage(sbmp, Point.Empty);
+                {
+                    Rectangle es = e.MeasureSize(depth + 1);
+                    g.DrawImage(sbmp, new PointF(size.Width / 2 - es.Width / 2, size.Height / 2 - es.Height / 2));
+                }
             }
             return bmp;
         }
 
-        public Rectangle MeasureSize()
+        public override Rectangle MeasureSize(int depth)
         {
+            if (depth > MaxDepth)
+                return new Rectangle(0, 0, 0, 0);
             Rectangle size = new Rectangle(0, 0, 0, 0);
             foreach (var d in elements)
-                size = Rectangle.Union(size, d.MeasureSize());
+                size = Rectangle.Union(size, d.MeasureSize(depth + 1));
             return size;
         }
 
@@ -61,7 +59,7 @@ namespace InfiniteDraw.Draw
 
         public override string ToString()
         {
-            return Name;
+            return "Factor" + base.ToString();
         }
     }
 }

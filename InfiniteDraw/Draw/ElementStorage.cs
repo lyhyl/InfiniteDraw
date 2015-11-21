@@ -8,10 +8,10 @@ namespace InfiniteDraw.Draw
 {
     public class ElementStorage
     {
-        private List<IDrawable> elements = new List<IDrawable>();
+        private Dictionary<int, Drawable> elements = new Dictionary<int, Drawable>();
 
-        public event ElementEvent ElementAdded;
-        public event ElementEvent ElementRemoved;
+        public event ElementEvent ElementCreated;
+        public event ElementEvent ElementDeleted;
         public event ElementEvent ElementModified;
 
         public event ElementEvent RequestEditElement;
@@ -20,21 +20,28 @@ namespace InfiniteDraw.Draw
         {
         }
 
-        public IDrawable Create(string type)
+        public Drawable Create(string type)
         {
             throw new NotImplementedException();
         }
 
         public int CreateFactor()
         {
-            elements.Add(new Factor());
-            return elements.Count - 1;
+            Drawable d = new Factor();
+            Add(d);
+            return d.GID;
+        }
+
+        public RefElement CreateRefElement(int gid)
+        {
+            return new RefElement(this, gid);
         }
 
         public int CreateBezier()
         {
-            elements.Add(new Bezier());
-            return elements.Count - 1;
+            Drawable d = new Bezier();
+            Add(d);
+            return d.GID;
         }
 
         public void Reset()
@@ -42,45 +49,45 @@ namespace InfiniteDraw.Draw
             elements.Clear();
         }
 
-        public void Add(IDrawable d)
+        public void Add(Drawable d)
         {
-            elements.Add(d);
+            elements[d.GID] = d;
 
-            if (ElementAdded != null)
-                ElementAdded(this, new ElementEventArgs(d));
+            if (ElementCreated != null)
+                ElementCreated(this, new ElementEventArgs(d));
         }
 
-        public void Remove(IDrawable d)
+        public void Delete(Drawable d)
         {
-            elements.Remove(d);
+            elements.Remove(d.GID);
 
-            if (ElementRemoved != null)
-                ElementRemoved(this, new ElementEventArgs(d));
+            if (ElementDeleted != null)
+                ElementDeleted(this, new ElementEventArgs(d));
         }
 
-        public void Modified(IDrawable d)
+        public void Modified(Drawable d)
         {
             if (ElementModified != null)
                 ElementModified(this, new ElementEventArgs(d));
         }
 
-        public void RequestEdit(IDrawable d)
+        public void RequestEdit(Drawable d)
         {
             if (RequestEditElement != null)
                 RequestEditElement(this, new ElementEventArgs(d));
         }
 
-        public IDrawable this[int index]
+        public Drawable this[int gid]
         {
-            get { return elements[index]; }
+            get { return elements[gid]; }
         }
     }
 
     public delegate void ElementEvent(object sender, ElementEventArgs e);
     public class ElementEventArgs : EventArgs
     {
-        public IDrawable Drawable { set; get; }
-        public ElementEventArgs(IDrawable d)
+        public Drawable Drawable { set; get; }
+        public ElementEventArgs(Drawable d)
         {
             Drawable = d;
         }

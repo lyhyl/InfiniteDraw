@@ -58,8 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Draw\ClosedBezier.cs" />
-    <Compile Include="Draw\IDrawable.cs" />
+    <Compile Include="Draw\Drawable.cs" />
     <Compile Include="Draw\Factor.cs" />
     <Compile Include="Draw\RefElement.cs" />
     <Compile Include="InfiniteDraw.Logical.cs">

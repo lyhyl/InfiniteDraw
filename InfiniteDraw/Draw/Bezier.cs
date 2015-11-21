@@ -9,32 +9,46 @@ using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw
 {
-    public class Bezier : IDrawable
+    public class Bezier : Drawable
     {
         private List<Vector> ctrlps = new List<Vector>();
-
-        public string Name { set; get; }
+        private Bitmap cache = null;
 
         public Bezier()
         {
-            ctrlps.Add(new Vector(0, 0));
+            ctrlps.Add(new Vector(-50, -50));
+            ctrlps.Add(new Vector(0, -50));
             ctrlps.Add(new Vector(50, 0));
-            ctrlps.Add(new Vector(100, 50));
-            ctrlps.Add(new Vector(100, 100));
+            ctrlps.Add(new Vector(50, 50));
         }
 
-        public Bitmap Draw(int depth)
+        public void Update(IEnumerable<Vector> vs)
         {
-            Rectangle size = MeasureSize();
-            Bitmap bmp = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(bmp);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            for (int i = 0; i + 3 < ctrlps.Count; i += 4)
-                g.DrawLines(Pens.Black, BezierSolver.Div(ctrlps[i], ctrlps[i + 1], ctrlps[i + 2], ctrlps[i + 3], 10));
-            return bmp;
+            cache = null;
+            ctrlps = new List<Vector>(vs);
         }
 
-        public Rectangle MeasureSize()
+        public override Bitmap Draw(int depth)
+        {
+            if (cache != null)
+                return cache;
+            Rectangle size = MeasureSize(depth);
+            Size offset = new Size(size.Width / 2, size.Height / 2);
+            cache = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
+            Graphics g = Graphics.FromImage(cache);
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            const int DivSeg = 16;
+            for (int i = 0; i + 3 < ctrlps.Count; i += 4)
+            {
+                var points = BezierSolver.Divide(ctrlps[i], ctrlps[i + 1], ctrlps[i + 2], ctrlps[i + 3], DivSeg);
+                for (int j = 0; j < points.Length; j++)
+                    points[j] += offset;
+                g.DrawLines(Pens.Black, points);
+            }
+            return cache;
+        }
+
+        public override Rectangle MeasureSize(int depth)
         {
             double l = 0, r = 0, t = 0, b = 0;
             foreach (var v in ctrlps)
@@ -44,9 +58,14 @@ namespace InfiniteDraw.Draw
                 t = Math.Min(t, v.Y);
                 b = Math.Max(b, v.Y);
             }
-            int il = (int)Math.Floor(l), it = (int)Math.Floor(t);
-            int w = (int)Math.Ceiling(r) - il, h = (int)Math.Ceiling(b) - it;
-            return new Rectangle(il, it, w, h);
+            int w = (int)Math.Ceiling(Math.Max(Math.Abs(l), Math.Abs(r))) + 1;
+            int h = (int)Math.Ceiling(Math.Max(Math.Abs(t), Math.Abs(b))) + 1;
+            return new Rectangle(-w, -h, 2 * w, 2 * h);
+        }
+
+        public override string ToString()
+        {
+            return "Bezier" + base.ToString();
         }
     }
 }

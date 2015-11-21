@@ -11,7 +11,7 @@ namespace InfiniteDraw.WorkForm
 {
     public class DrawForms
     {
-        private Dictionary<IDrawable, DrawForm> forms = new Dictionary<IDrawable, DrawForm>();
+        private Dictionary<Drawable, DrawForm> forms = new Dictionary<Drawable, DrawForm>();
         private ElementStorage elements;
         private DockPanel panel;
 
@@ -20,11 +20,11 @@ namespace InfiniteDraw.WorkForm
             elements = es;
             panel = dp;
             
-            elements.ElementRemoved += Factors_FactorRemoved;
-            elements.RequestEditElement += Factors_FactorActived;
+            elements.ElementDeleted += ElementStorage_ElementDeleted;
+            elements.RequestEditElement += ElementStorage_RequestEditElement;
         }
 
-        private void Factors_FactorActived(object sender, ElementEventArgs e)
+        private void ElementStorage_RequestEditElement(object sender, ElementEventArgs e)
         {
             if (!forms.ContainsKey(e.Drawable))
             {
@@ -37,7 +37,7 @@ namespace InfiniteDraw.WorkForm
                 forms[e.Drawable].Focus();
         }
 
-        private void Factors_FactorRemoved(object sender, ElementEventArgs e)
+        private void ElementStorage_ElementDeleted(object sender, ElementEventArgs e)
         {
             if (forms.ContainsKey(e.Drawable))
             {
