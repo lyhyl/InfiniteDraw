@@ -1,4 +1,5 @@
 ﻿using InfiniteDraw.Draw;
+using InfiniteDraw.Draw.Base;
 using InfiniteDraw.Utilities;
 using System;
 using System.Collections.Generic;
@@ -43,10 +44,14 @@ namespace InfiniteDraw.WorkForm
         private void newFactorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Factor f = elements[elements.CreateFactor()] as Factor;
-            f.AddElement(elements.CreateRefElement(elements.CreateBezier()));
-            RefElement re = elements.CreateRefElement(f.GID);
-            re.BaseTransform = Vector.YAxis * .7;
+            int bezier = elements.CreateBezier();
+            RefElement re = elements[elements.CreateRefElement(bezier)] as RefElement;
             f.AddElement(re);
+            RefElement re2 = elements[elements.CreateRefElement(f.GID)] as RefElement;
+            Vector v = new Vector(2, 1);
+            v.Normalize();
+            re2.BaseTransform = v * .67;
+            f.AddElement(re2);
         }
 
         private void deleteElementToolStripMenuItem_Click(object sender, EventArgs e)

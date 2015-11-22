@@ -1,4 +1,5 @@
 ﻿using InfiniteDraw.Draw;
+using InfiniteDraw.Draw.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -17,7 +17,7 @@ namespace InfiniteDraw.Draw
         /// </summary>
         /// <param name="depth">Begining level</param>
         /// <returns></returns>
-        public abstract Rectangle MeasureSize(int depth);
+        public abstract RectangleF MeasureSize(int depth);
 
         /// <summary>
         /// Draw on Bitmap

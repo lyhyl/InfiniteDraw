@@ -1,4 +1,5 @@
 ﻿using InfiniteDraw.Draw;
+using InfiniteDraw.Draw.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,12 +12,15 @@ namespace InfiniteDraw.WorkForm
 {
     public partial class DrawForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
+        private ElementStorage elements;
+
         public Drawable Drawable { private set; get; }
 
-        public DrawForm(Drawable d)
+        public DrawForm(ElementStorage es, Drawable d)
         {
             InitializeComponent();
             InitializeFactor(d);
+            elements = es;
         }
 
         private void InitializeFactor(Drawable d)
@@ -28,6 +32,8 @@ namespace InfiniteDraw.WorkForm
         protected override void OnGotFocus(EventArgs e)
         {
             base.OnGotFocus(e);
+
+            elements.Selected(Drawable);
         }
 
         protected override void OnPaint(PaintEventArgs e)

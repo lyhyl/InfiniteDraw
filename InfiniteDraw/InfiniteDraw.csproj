@@ -59,13 +59,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Draw\Drawable.cs" />
-    <Compile Include="Draw\Factor.cs" />
-    <Compile Include="Draw\RefElement.cs" />
+    <Compile Include="Draw\Base\Factor.cs" />
+    <Compile Include="Draw\IEditable.cs" />
+    <Compile Include="Draw\Base\RefElement.cs" />
+    <Compile Include="Edit\ElementProperty.cs" />
+    <Compile Include="Edit\IPropertyEditable.cs" />
     <Compile Include="InfiniteDraw.Logical.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Utilities\BezierSolver.cs" />
-    <Compile Include="Draw\ElementStorage.cs" />
+    <Compile Include="Draw\Bezier\BezierSolver.cs" />
+    <Compile Include="Draw\Base\ElementStorage.cs" />
     <Compile Include="Utilities\Vector.cs" />
     <Compile Include="WorkForm\DrawForm.cs">
       <SubType>Form</SubType>
@@ -81,7 +84,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Draw\Bezier.cs" />
+    <Compile Include="Draw\Bezier\Bezier3.cs" />
     <Compile Include="WorkForm\DrawForms.cs" />
     <Compile Include="WorkForm\ElementListForm.cs">
       <SubType>Form</SubType>

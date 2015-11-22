@@ -1,10 +1,11 @@
-﻿using System;
+﻿using InfiniteDraw.Draw.Bezier;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfiniteDraw.Draw
+namespace InfiniteDraw.Draw.Base
 {
     public class ElementStorage
     {
@@ -13,6 +14,7 @@ namespace InfiniteDraw.Draw
         public event ElementEvent ElementCreated;
         public event ElementEvent ElementDeleted;
         public event ElementEvent ElementModified;
+        public event ElementEvent ElementSelected;
 
         public event ElementEvent RequestEditElement;
 
@@ -32,14 +34,16 @@ namespace InfiniteDraw.Draw
             return d.GID;
         }
 
-        public RefElement CreateRefElement(int gid)
+        public int CreateRefElement(int gid)
         {
-            return new RefElement(this, gid);
+            Drawable d = new RefElement(this, gid);
+            Add(d);
+            return d.GID;
         }
 
         public int CreateBezier()
         {
-            Drawable d = new Bezier();
+            Drawable d = new Bezier3();
             Add(d);
             return d.GID;
         }
@@ -69,6 +73,12 @@ namespace InfiniteDraw.Draw
         {
             if (ElementModified != null)
                 ElementModified(this, new ElementEventArgs(d));
+        }
+
+        public void Selected(Drawable d)
+        {
+            if (ElementSelected != null)
+                ElementSelected(this, new ElementEventArgs(d));
         }
 
         public void RequestEdit(Drawable d)

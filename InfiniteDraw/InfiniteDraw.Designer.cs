@@ -89,7 +89,7 @@
             this.elementListToolStripMenuItem.Name = "elementListToolStripMenuItem";
             this.elementListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.elementListToolStripMenuItem.Text = "&Element List";
-            this.elementListToolStripMenuItem.Click += new System.EventHandler(this.factorListToolStripMenuItem_Click);
+            this.elementListToolStripMenuItem.Click += new System.EventHandler(this.elementListToolStripMenuItem_Click);
             // 
             // toolboxToolStripMenuItem
             // 

@@ -1,4 +1,5 @@
 ﻿using InfiniteDraw.Draw;
+using InfiniteDraw.Draw.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace InfiniteDraw.WorkForm
         {
             if (!forms.ContainsKey(e.Drawable))
             {
-                DrawForm drawForm = new DrawForm(e.Drawable);
+                DrawForm drawForm = new DrawForm(elements, e.Drawable);
                 drawForm.FormClosed += (s, a) => { forms.Remove(e.Drawable); };
                 forms[e.Drawable] = drawForm;
                 drawForm.Show(panel);
