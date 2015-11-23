@@ -12,49 +12,32 @@ namespace InfiniteDraw.Draw.Base
 {
     public class Factor : Drawable, IPropertyEditable
     {
+        private const string defaultName = nameof(Factor);
+        private const int defaultMaxDepth = 8;
         private List<RefElement> elements = new List<RefElement>();
 
-        public int MaxDepth { set; get; }
-        public string Name { set; get; }
+        public int MaxDepth { set; get; } = defaultMaxDepth;
+        public string Name { set; get; } = defaultName;
 
         public Factor()
         {
-            MaxDepth = 8;
-            Name = "Factor";
         }
 
-        public override Bitmap Draw(int depth)
+        public override void Draw(int depth, Graphics g)
         {
             if (depth >= MaxDepth)
-                return null;
-            RectangleF size = MeasureSize(depth);
-            if (size == RectangleF.Empty)
-                return null;
-            Bitmap bmp = new Bitmap(
-                (int)(Math.Ceiling(size.Right) - Math.Floor(size.Left)),
-                (int)(Math.Ceiling(size.Bottom) - Math.Floor(size.Top)),
-                PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(bmp);
-            g.SmoothingMode = SmoothingMode.HighQuality;
+                return;
             foreach (var e in elements)
-            {
-                Bitmap sbmp = e.Draw(depth + 1);
-                if (sbmp != null)
-                {
-                    RectangleF es = e.MeasureSize(depth + 1);
-                    g.DrawImage(sbmp, new PointF(size.Width / 2 - es.Width / 2, size.Height / 2 - es.Height / 2));
-                }
-            }
-            return bmp;
+                e.Draw(depth + 1, g);
         }
 
-        public override RectangleF MeasureSize(int depth)
+        public override RectangleF MeasureSize(int depth, Matrix m)
         {
             if (depth >= MaxDepth || elements.Count == 0)
                 return RectangleF.Empty;
-            RectangleF size = elements[0].MeasureSize(depth + 1);
+            RectangleF size = elements[0].MeasureSize(depth + 1, m);
             for (int i = 1; i < elements.Count; i++)
-                size = RectangleF.Union(size, elements[i].MeasureSize(depth + 1));
+                size = RectangleF.Union(size, elements[i].MeasureSize(depth + 1, m));
             return size;
         }
 
@@ -63,10 +46,7 @@ namespace InfiniteDraw.Draw.Base
             elements.Add(re);
         }
 
-        public override string ToString()
-        {
-            return Name + base.ToString();
-        }
+        public override string ToString() => Name + base.ToString();
 
         public ElementProperty[] EditableProperties
         {
@@ -78,17 +58,17 @@ namespace InfiniteDraw.Draw.Base
                     (v) => {
                         if (v is string)
                             Name = v as string;
-                        return !(v is string);
+                        return v is string;
                     },
-                    () => { return Name; }, "Factor"),
+                    () => { return Name; }, defaultName),
 
                     new ElementProperty("Max Depth", typeof(int),
                     (v) => {
                         if (v is int)
                             MaxDepth = (int)v;
-                        return !(v is string);
+                        return v is int;
                     },
-                    () => { return MaxDepth; }, 8)
+                    () => { return MaxDepth; }, defaultMaxDepth)
                 };
             }
         }

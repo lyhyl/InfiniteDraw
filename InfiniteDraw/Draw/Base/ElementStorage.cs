@@ -56,47 +56,28 @@ namespace InfiniteDraw.Draw.Base
         public void Add(Drawable d)
         {
             elements[d.GID] = d;
-
-            if (ElementCreated != null)
-                ElementCreated(this, new ElementEventArgs(d));
+            ElementCreated?.Invoke(this, new ElementEventArgs(d));
         }
 
         public void Delete(Drawable d)
         {
             elements.Remove(d.GID);
-
-            if (ElementDeleted != null)
-                ElementDeleted(this, new ElementEventArgs(d));
+            ElementDeleted?.Invoke(this, new ElementEventArgs(d));
         }
 
-        public void Modified(Drawable d)
-        {
-            if (ElementModified != null)
-                ElementModified(this, new ElementEventArgs(d));
-        }
+        public void Modified(Drawable d) => ElementModified?.Invoke(this, new ElementEventArgs(d));
 
-        public void Selected(Drawable d)
-        {
-            if (ElementSelected != null)
-                ElementSelected(this, new ElementEventArgs(d));
-        }
+        public void Selected(Drawable d) => ElementSelected?.Invoke(this, new ElementEventArgs(d));
 
-        public void RequestEdit(Drawable d)
-        {
-            if (RequestEditElement != null)
-                RequestEditElement(this, new ElementEventArgs(d));
-        }
+        public void RequestEdit(Drawable d) => RequestEditElement?.Invoke(this, new ElementEventArgs(d));
 
-        public Drawable this[int gid]
-        {
-            get { return elements[gid]; }
-        }
+        public Drawable this[int gid] => elements[gid];
     }
 
     public delegate void ElementEvent(object sender, ElementEventArgs e);
     public class ElementEventArgs : EventArgs
     {
-        public Drawable Drawable { set; get; }
+        public Drawable Drawable { get; }
         public ElementEventArgs(Drawable d)
         {
             Drawable = d;

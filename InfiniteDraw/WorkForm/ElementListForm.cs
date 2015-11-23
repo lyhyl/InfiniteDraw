@@ -50,7 +50,7 @@ namespace InfiniteDraw.WorkForm
             RefElement re2 = elements[elements.CreateRefElement(f.GID)] as RefElement;
             Vector v = new Vector(2, 1);
             v.Normalize();
-            re2.BaseTransform = v * .67;
+            re2.BaseTransform = v * .6;
             f.AddElement(re2);
         }
 
@@ -63,7 +63,10 @@ namespace InfiniteDraw.WorkForm
         {
             int index = listBox.IndexFromPoint(e.Location);
             if (index != ListBox.NoMatches)
+            {
+                listBox.SelectedIndex = index;
                 elements.RequestEdit(listBox.SelectedItem as Drawable);
+            }
         }
 
         private void listBox_MouseDown(object sender, MouseEventArgs e)

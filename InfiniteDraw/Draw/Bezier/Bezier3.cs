@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -11,9 +12,13 @@ namespace InfiniteDraw.Draw.Bezier
 {
     public class Bezier3 : Drawable
     {
+        private const string defaultName = nameof(Bezier3);
+        private const int defaultPrecision = 16;
+
         private List<Vector> ctrlps = new List<Vector>();
-        private Bitmap cacheImage = null;
-        private RectangleF cacheSize = Rectangle.Empty;
+
+        public string Name { set; get; } = defaultName;
+        public int Precision { set; get; } = defaultPrecision;
 
         public Bezier3()
         {
@@ -25,67 +30,42 @@ namespace InfiniteDraw.Draw.Bezier
 
         public void Update(IEnumerable<Vector> vs)
         {
-            cacheImage = null;
-            cacheSize = Rectangle.Empty;
             ctrlps = new List<Vector>(vs);
         }
 
-        public override Bitmap Draw(int depth)
+        public override void Draw(int depth, Graphics g)
         {
-            const int DivSeg = 16;
-
-            if (cacheImage != null)
-                return cacheImage;
-
-            RectangleF size = MeasureSize(depth);
-            if (size == RectangleF.Empty)
-                return null;
-
-            cacheImage = new Bitmap(
-                (int)(Math.Ceiling(size.Right) - Math.Floor(size.Left)),
-                (int)(Math.Ceiling(size.Bottom) - Math.Floor(size.Top)),
-                PixelFormat.Format32bppArgb);
-            Graphics g = Graphics.FromImage(cacheImage);
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            g.TranslateTransform(-size.Left, -size.Top);
+            /// TODO : Auto Precision
+            int DivSeg = Precision;
             for (int i = 0; i + 3 < ctrlps.Count; i += 4)
             {
                 var points = BezierSolver.Divide(ctrlps[i], ctrlps[i + 1], ctrlps[i + 2], ctrlps[i + 3], DivSeg);
-                g.DrawLines(Pens.Black, points);
+                Pen p = new Pen(Color.Black, 1);
+                g.DrawLines(p, points);
             }
-            return cacheImage;
         }
 
-        public override RectangleF MeasureSize(int depth)
+        public override RectangleF MeasureSize(int depth, Matrix m)
         {
-            const double w = 1;
-
-            if (cacheSize != RectangleF.Empty)
-                return cacheSize;
+            /// TODO : Dynamic Width
+            const float MaxWidth = 1;
 
             if (ctrlps.Count == 0)
                 return RectangleF.Empty;
 
-            double l = ctrlps[0].X, r = ctrlps[0].X, t = ctrlps[0].Y, b = ctrlps[0].Y;
-            for (int i = 1; i < ctrlps.Count; i++)
+            PointF[] ctr = ctrlps.ConvertAll((v) => { return v.ToPointF(); }).ToArray();
+            m.TransformPoints(ctr);
+            float l = ctr[0].X, r = ctr[0].X, t = ctr[0].Y, b = ctr[0].Y;
+            for (int i = 1; i < ctr.Length; i++)
             {
-                l = Math.Min(l, ctrlps[i].X);
-                r = Math.Max(r, ctrlps[i].X);
-                t = Math.Min(t, ctrlps[i].Y);
-                b = Math.Max(b, ctrlps[i].Y);
+                l = Math.Min(l, ctr[i].X);
+                r = Math.Max(r, ctr[i].X);
+                t = Math.Min(t, ctr[i].Y);
+                b = Math.Max(b, ctr[i].Y);
             }
-            l = Math.Floor(l - w);
-            r = Math.Ceiling(r + w);
-            t = Math.Floor(t - w);
-            b = Math.Ceiling(b + w);
-
-            cacheSize = new RectangleF((float)l, (float)t, (float)(r - l), (float)(b - t));
-            return cacheSize;
+            return new RectangleF(l - MaxWidth, t - MaxWidth, r - l + MaxWidth * 2, b - t + MaxWidth * 2);
         }
 
-        public override string ToString()
-        {
-            return "Bezier" + base.ToString();
-        }
+        public override string ToString() => Name + base.ToString();
     }
 }

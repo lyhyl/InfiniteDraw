@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InfiniteDraw.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace InfiniteDraw.Draw
     {
         RectangleF[] GetEditRegions();
         void Modified(int index);
-        void Create();
+        EditState Create(Vector position);
         void Delete(int index);
     }
+    public enum EditState { Editing, Ended, Quest }
 }

@@ -1,4 +1,5 @@
-﻿using InfiniteDraw.Draw.Base;
+﻿using InfiniteDraw.Draw;
+using InfiniteDraw.Draw.Base;
 using InfiniteDraw.Edit;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,6 @@ namespace InfiniteDraw.WorkForm
             if (newValue == editableProperties)
                 return;
             editableProperties = newValue;
-            Console.WriteLine(editableProperties);
             RecreateTable();
         }
         
@@ -51,19 +51,17 @@ namespace InfiniteDraw.WorkForm
 
             foreach (var p in editableProperties.EditableProperties)
             {
-                Label left = new Label();
-                left.Dock = DockStyle.Top;
-                left.Text = p.Name;
-                left.TextAlign = ContentAlignment.MiddleLeft;
-                propertyNamePanel.Controls.Add(left);
+                Label nameLabel = new Label();
+                nameLabel.Dock = DockStyle.Top;
+                nameLabel.Text = p.Name;
+                nameLabel.TextAlign = ContentAlignment.MiddleLeft;
+                propertyNamePanel.Controls.Add(nameLabel);
 
-                Control right;
-                CreateTerm(p, out right);
-                propertyValuePanel.Controls.Add(right);
+                propertyValuePanel.Controls.Add(CreateTerm(p));
             }
         }
 
-        private void CreateTerm(ElementProperty p, out Control right)
+        private Control CreateTerm(ElementProperty p)
         {
             if (p.Type == typeof(string))
             {
@@ -72,9 +70,13 @@ namespace InfiniteDraw.WorkForm
                 ri.Text = p.Getter() as string;
                 ri.TextChanged += (s, e) => {
                     if (!p.Setter(ri.Text))
+                    {
                         p.Setter(p.Default);
+                        ri.Text = p.Default as string;
+                    }
+                    elements.Modified(editableProperties as Drawable);
                 };
-                right = ri;
+                return ri;
             }
             else if (p.Type == typeof(int))
             {
@@ -83,9 +85,13 @@ namespace InfiniteDraw.WorkForm
                 ri.Value = (int)p.Getter();
                 ri.ValueChanged += (s, e) => {
                     if (!p.Setter((int)ri.Value))
+                    {
                         p.Setter(p.Default);
+                        ri.Value = (int)p.Default;
+                    }
+                    elements.Modified(editableProperties as Drawable);
                 };
-                right = ri;
+                return ri;
             }
             else if(p.Type.IsEnum)
             {
@@ -95,9 +101,13 @@ namespace InfiniteDraw.WorkForm
                 /// TODO
                 ri.SelectedValueChanged += (s, e) => {
                     if (!p.Setter(ri.SelectedValue))
+                    {
                         p.Setter(p.Default);
+                        ri.SelectedValue = p.Default;
+                    }
+                    elements.Modified(editableProperties as Drawable);
                 };
-                right = ri;
+                return ri;
             }
             else
             {
@@ -105,7 +115,7 @@ namespace InfiniteDraw.WorkForm
                 ri.Dock = DockStyle.Top;
                 ri.Text = "Unsupported Type";
                 ri.TextAlign = ContentAlignment.MiddleLeft;
-                right = ri;
+                return ri;
             }
         }
     }

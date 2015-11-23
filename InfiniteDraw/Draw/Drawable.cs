@@ -1,34 +1,29 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace InfiniteDraw.Draw
 {
     public abstract class Drawable
     {
-        public int GID { private set; get; }
         private static int AutoCount = 0;
 
-        public Drawable()
-        {
-            GID = AutoCount++;
-        }
+        public int GID { get; } = AutoCount++;
 
         /// <summary>
-        /// Get approximately size of itself
+        /// Get transformed size
         /// </summary>
         /// <param name="depth">Begining level</param>
+        /// <param name="m">Transform matrix</param>
         /// <returns></returns>
-        public abstract RectangleF MeasureSize(int depth);
+        public abstract RectangleF MeasureSize(int depth, Matrix m);
 
         /// <summary>
-        /// Draw on Bitmap
+        /// Draw on graphics
         /// </summary>
         /// <param name="depth">Begining level</param>
-        /// <returns>null for empty</returns>
-        public abstract Bitmap Draw(int depth);
+        /// <param name="g">Graphics to draw</param>
+        public abstract void Draw(int depth, Graphics g);
 
-        public override string ToString()
-        {
-            return GID.ToString();
-        }
+        public override string ToString() => GID.ToString();
     }
 }
