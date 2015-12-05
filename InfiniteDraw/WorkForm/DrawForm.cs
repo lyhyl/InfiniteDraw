@@ -15,16 +15,37 @@ namespace InfiniteDraw.WorkForm
     public partial class DrawForm : WeifenLuo.WinFormsUI.Docking.DockContent
     {
         private ElementStorage elements;
-        private RectangleF canvas = RectangleF.Empty;
         private Point offset = new Point(0, 0);
         private int scale = 100;
+
+        private RectangleF canvas = RectangleF.Empty;
+
         private Bitmap art = null;
         private bool artValidated = false;
-
-        private bool Dragging = false;
-        private Point lastMousePos = Point.Empty;
+        private bool renderView = false;
 
         public Drawable Drawable { private set; get; }
+
+        private Matrix WorldScaleMatrix
+        {
+            get
+            {
+                return new Matrix(scale / 100.0f, 0, 0, scale / 100.0f, 0, 0);
+            }
+        }
+
+        private Point WorldTranslateOffset
+        {
+            get
+            {
+                Point p = new Point();
+                p += new Size(ClientSize.Width / 2, ClientSize.Height / 2);
+                p += new Size(offset.X, offset.Y);
+                if (artValidated)
+                    p += new Size(-art.Width / 2, -art.Height / 2);
+                return p;
+            }
+        }
 
         public DrawForm(ElementStorage es, Drawable d)
         {
@@ -49,43 +70,13 @@ namespace InfiniteDraw.WorkForm
             MouseWheel += DrawForm_MouseWheel;
         }
 
-        private void DrawForm_MouseWheel(object sender, MouseEventArgs e)
-        {
-            Invalidate(new Rectangle(ArtPosition(), art.Size));
-            artValidated = false;
-            scale += e.Delta / 10;
-        }
-
-        private void DrawForm_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left && ClientRectangle.Contains(e.Location))
-            {
-                lastMousePos = e.Location;
-                Dragging = true;
-            }
-        }
-
-        private void DrawForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (Dragging)
-            {
-                Invalidate(new Rectangle(ArtPosition(), art.Size));
-                offset.X += e.X - lastMousePos.X;
-                offset.Y += e.Y - lastMousePos.Y;
-                lastMousePos = e.Location;
-            }
-        }
-
-        private void DrawForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            Dragging = false;
-        }
-
         private void Elements_ElementModified(object sender, ElementEventArgs e)
         {
             Text = Drawable.ToString();
+            /// TODO : Must improve it
             Invalidate();
-            artValidated = false;
+
+            InvalidateArt(true);
         }
 
         protected override void OnGotFocus(EventArgs e)
@@ -100,45 +91,67 @@ namespace InfiniteDraw.WorkForm
             base.OnPaint(e);
 
             if (!artValidated)
+                DrawArt();
+            if (!canvas.IsEmpty)
             {
-                Matrix m = new Matrix();
-                m.Scale(scale / 100.0f, scale / 100.0f);
-                canvas = Drawable.MeasureSize(0, m);
-                if (canvas == RectangleF.Empty)
-                    return;
-
-                /// TODO : Limit Size
-                int artW = (int)Math.Min(Math.Ceiling(canvas.Right) - Math.Floor(canvas.Left), 2048);
-                int artH = (int)Math.Min(Math.Ceiling(canvas.Bottom) - Math.Floor(canvas.Top), 2048);
-                art = new Bitmap(artW, artH, PixelFormat.Format32bppArgb);
-
-                Graphics g = Graphics.FromImage(art);
-                g.CompositingMode = CompositingMode.SourceOver;
-                g.InterpolationMode = InterpolationMode.High;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                g.SmoothingMode = SmoothingMode.HighQuality;
-
-                g.TranslateTransform((float)-Math.Floor(canvas.Left), (float)-Math.Floor(canvas.Top));
-                g.ScaleTransform(scale / 100.0f, scale / 100.0f);
-                Drawable.Draw(0, g);
-
-                artValidated = true;
+                Point offset = WorldTranslateOffset;
+                e.Graphics.TranslateTransform(offset.X, offset.Y);
+                e.Graphics.DrawImage(art, new Point());
             }
-
-            e.Graphics.DrawImage(art, ArtPosition());
         }
 
-        private Point ArtPosition()
+        private void DrawArt()
         {
-            Point pos = new Point(ClientSize.Width / 2, ClientSize.Height / 2);
-            pos.X += offset.X;
-            pos.Y += offset.Y;
-            if (artValidated)
-            {
-                pos.X -= art.Width / 2;
-                pos.Y -= art.Height / 2;
-            }
-            return pos;
+            if (renderView)
+                canvas = Drawable.MeasureSize(WorldScaleMatrix);
+            else
+                canvas = Drawable.MeasureEditSize(WorldScaleMatrix);
+
+            if (canvas.IsEmpty)
+                return;
+
+            if (renderView)
+                Drawable.Draw(CreateImageGraphics(canvas, out art));
+            else
+                Drawable.EditDraw(CreateImageGraphics(canvas, out art));
+
+            artValidated = true;
+        }
+
+        private Graphics CreateImageGraphics(RectangleF size, out Bitmap image)
+        {
+            int w = (int)Math.Min(Math.Ceiling(size.Right) - Math.Floor(size.Left), 2048);
+            int h = (int)Math.Min(Math.Ceiling(size.Bottom) - Math.Floor(size.Top), 2048);
+            image = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+
+            Graphics g = Graphics.FromImage(image);
+            g.CompositingMode = CompositingMode.SourceOver;
+            g.InterpolationMode = InterpolationMode.High;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            Matrix trans = new Matrix();
+
+            trans.Translate((float)-Math.Floor(size.Left), (float)-Math.Floor(size.Top));
+            trans.Scale(scale / 100.0f, scale / 100.0f);
+
+            g.Transform = trans;
+
+            return g;
+        }
+
+        private void InvalidateArt(bool redrawElement)
+        {
+            artValidated = !redrawElement;
+            Invalidate(new Rectangle(WorldTranslateOffset, art.Size));
+        }
+
+        private void editViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            editViewToolStripMenuItem.Checked = !editViewToolStripMenuItem.Checked;
+            renderView = !editViewToolStripMenuItem.Checked;
+            InvalidateArt(true);
+            Invalidate();
         }
     }
 }

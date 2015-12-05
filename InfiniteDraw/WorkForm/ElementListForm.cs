@@ -43,7 +43,7 @@ namespace InfiniteDraw.WorkForm
 
         private void newFactorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Factor f = elements[elements.CreateFactor()] as Factor;
+            Prototype f = elements[elements.CreateFactor()] as Prototype;
             int bezier = elements.CreateBezier();
             RefElement re = elements[elements.CreateRefElement(bezier)] as RefElement;
             f.AddElement(re);

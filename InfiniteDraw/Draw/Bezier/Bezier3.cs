@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw.Bezier
 {
-    public class Bezier3 : Drawable
+    public partial class Bezier3 : Drawable
     {
+        private partial class ControlPoint { }
+
         private const string defaultName = nameof(Bezier3);
-        private const int defaultPrecision = 16;
+        private const int defaultPrecision = 24;
 
         private List<Vector> ctrlps = new List<Vector>();
 
@@ -37,12 +39,25 @@ namespace InfiniteDraw.Draw.Bezier
         {
             /// TODO : Auto Precision
             int DivSeg = Precision;
+            Pen pen = new Pen(Color.Black, 1);
             for (int i = 0; i + 3 < ctrlps.Count; i += 4)
             {
                 var points = BezierSolver.Divide(ctrlps[i], ctrlps[i + 1], ctrlps[i + 2], ctrlps[i + 3], DivSeg);
-                Pen p = new Pen(Color.Black, 1);
-                g.DrawLines(p, points);
+                g.DrawLines(pen, points);
             }
+        }
+
+        public override void EditDraw(int depth, Graphics g)
+        {
+            Draw(depth, g);
+            Pen pen = new Pen(Color.Red, 0.5f);
+            foreach (var p in ctrlps)
+                g.DrawEllipse(pen, (float)p.X - 1, (float)p.Y - 1, 2, 2);
+            RectangleF box = MeasureEditSize(depth, g.Transform);
+            Matrix memo = g.Transform;
+            g.Transform = new Matrix();
+            g.DrawRectangle(pen, box.Left, box.Top, box.Width, box.Height);
+            g.Transform = memo;
         }
 
         public override RectangleF MeasureSize(int depth, Matrix m)
@@ -63,7 +78,16 @@ namespace InfiniteDraw.Draw.Bezier
                 t = Math.Min(t, ctr[i].Y);
                 b = Math.Max(b, ctr[i].Y);
             }
-            return new RectangleF(l - MaxWidth, t - MaxWidth, r - l + MaxWidth * 2, b - t + MaxWidth * 2);
+            RectangleF region = new RectangleF(l, t, r - l, b - t);
+            //region.Inflate(MaxWidth, MaxWidth);
+            return region;
+        }
+
+        public override RectangleF MeasureEditSize(int depth, Matrix m)
+        {
+            RectangleF region = MeasureSize(depth, m);
+            //region.Inflate(10, 10);
+            return region;
         }
 
         public override string ToString() => Name + base.ToString();

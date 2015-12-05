@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfiniteDraw.Edit
+namespace InfiniteDraw.Edit.Property
 {
     public delegate object Getter();
     public delegate bool Setter(object value);

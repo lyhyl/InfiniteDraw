@@ -9,20 +9,15 @@ namespace InfiniteDraw.Draw
 
         public int GID { get; } = AutoCount++;
 
-        /// <summary>
-        /// Get transformed size
-        /// </summary>
-        /// <param name="depth">Begining level</param>
-        /// <param name="m">Transform matrix</param>
-        /// <returns></returns>
         public abstract RectangleF MeasureSize(int depth, Matrix m);
-
-        /// <summary>
-        /// Draw on graphics
-        /// </summary>
-        /// <param name="depth">Begining level</param>
-        /// <param name="g">Graphics to draw</param>
         public abstract void Draw(int depth, Graphics g);
+        public abstract RectangleF MeasureEditSize(int depth, Matrix m);
+        public abstract void EditDraw(int depth, Graphics g);
+
+        public RectangleF MeasureSize(Matrix m) => MeasureSize(0, m);
+        public void Draw(Graphics g) => Draw(0, g);
+        public RectangleF MeasureEditSize(Matrix m) => MeasureEditSize(0, m);
+        public void EditDraw(Graphics g) => EditDraw(0, g);
 
         public override string ToString() => GID.ToString();
     }

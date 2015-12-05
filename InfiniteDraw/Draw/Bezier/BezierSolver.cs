@@ -31,9 +31,4 @@ namespace InfiniteDraw.Draw.Bezier
             return points;
         }
     }
-
-    public static class VectorConvert
-    {
-        public static PointF ToPointF(this Vector v) => new PointF((float)v.X, (float)v.Y);
-    }
 }

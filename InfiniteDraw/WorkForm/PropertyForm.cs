@@ -1,6 +1,7 @@
 ﻿using InfiniteDraw.Draw;
 using InfiniteDraw.Draw.Base;
 using InfiniteDraw.Edit;
+using InfiniteDraw.Edit.Property;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -67,39 +68,45 @@ namespace InfiniteDraw.WorkForm
             {
                 TextBox ri = new TextBox();
                 ri.Dock = DockStyle.Top;
-                ri.Text = p.Getter() as string;
-                ri.TextChanged += (s, e) => {
+                ri.Text = Convert.ToString(p.Getter());
+                ri.TextChanged += (s, e) =>
+                {
                     if (!p.Setter(ri.Text))
                     {
                         p.Setter(p.Default);
-                        ri.Text = p.Default as string;
+                        ri.Text = Convert.ToString(p.Default);
                     }
                     elements.Modified(editableProperties as Drawable);
                 };
                 return ri;
             }
-            else if (p.Type == typeof(int))
+            else if (p.Type == typeof(int) || p.Type == typeof(double) || p.Type == typeof(float))
             {
                 NumericUpDown ri = new NumericUpDown();
                 ri.Dock = DockStyle.Top;
-                ri.Value = (int)p.Getter();
-                ri.ValueChanged += (s, e) => {
-                    if (!p.Setter((int)ri.Value))
+                ri.DecimalPlaces = p.Type == typeof(int) ? 0 : 3;
+                ri.Minimum = decimal.MinValue;
+                ri.Maximum = decimal.MaxValue;
+                ri.Value = Convert.ToDecimal(p.Getter());
+                ri.ValueChanged += (s, e) =>
+                {
+                    if (!p.Setter(ri.Value))
                     {
                         p.Setter(p.Default);
-                        ri.Value = (int)p.Default;
+                        ri.Value = Convert.ToDecimal(p.Default);
                     }
                     elements.Modified(editableProperties as Drawable);
                 };
                 return ri;
             }
-            else if(p.Type.IsEnum)
+            else if (p.Type.IsEnum)
             {
                 ComboBox ri = new ComboBox();
                 ri.Dock = DockStyle.Top;
                 ri.FormattingEnabled = true;
                 /// TODO
-                ri.SelectedValueChanged += (s, e) => {
+                ri.SelectedValueChanged += (s, e) =>
+                {
                     if (!p.Setter(ri.SelectedValue))
                     {
                         p.Setter(p.Default);

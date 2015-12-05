@@ -58,12 +58,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Draw\Base\Prototype.Edit.cs" />
+    <Compile Include="Draw\Base\Prototype.Property.cs" />
+    <Compile Include="Draw\Base\RefElement.Edit.cs" />
+    <Compile Include="Draw\Base\RefElement.Property.cs" />
+    <Compile Include="Draw\Bezier\Bezier3.ControlPoint.cs" />
     <Compile Include="Draw\Drawable.cs" />
-    <Compile Include="Draw\Base\Factor.cs" />
-    <Compile Include="Draw\IEditable.cs" />
+    <Compile Include="Draw\Base\Prototype.cs" />
+    <Compile Include="Edit\Draw\IDraggableComponent.cs" />
+    <Compile Include="Edit\Draw\IEditable.cs" />
     <Compile Include="Draw\Base\RefElement.cs" />
-    <Compile Include="Edit\ElementProperty.cs" />
-    <Compile Include="Edit\IPropertyEditable.cs" />
+    <Compile Include="Edit\Property\ElementProperty.cs" />
+    <Compile Include="Edit\Property\IPropertyEditable.cs" />
     <Compile Include="InfiniteDraw.Logical.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Draw\Bezier\Bezier3.cs" />
+    <Compile Include="WorkForm\DrawForm.Logical.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WorkForm\DrawForms.cs" />
     <Compile Include="WorkForm\ElementListForm.cs">
       <SubType>Form</SubType>

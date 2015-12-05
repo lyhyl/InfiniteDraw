@@ -29,7 +29,7 @@ namespace InfiniteDraw.Draw.Base
 
         public int CreateFactor()
         {
-            Drawable d = new Factor();
+            Drawable d = new Prototype();
             Add(d);
             return d.GID;
         }
