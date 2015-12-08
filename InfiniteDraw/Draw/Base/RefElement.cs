@@ -1,13 +1,7 @@
-﻿using InfiniteDraw.Edit.Draw;
-using InfiniteDraw.Utilities;
+﻿using InfiniteDraw.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw.Base
 {
@@ -25,45 +19,30 @@ namespace InfiniteDraw.Draw.Base
             Reference = r;
         }
 
-        protected RefElement()
+        public override void Draw(Graphics g, int depth, Matrix m, WorkMode editMode)
         {
+            Matrix mx = TransformMatrix;
+            mx.Multiply(m);
+            GetReference().Draw(g, depth, mx, editMode);
+
+            if (editMode == WorkMode.Edit && depth <= 1)
+                DrawArrow(g, mx);
         }
 
-        public override void Draw(int depth, Graphics g)
+        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode editMode)
         {
-            Matrix memo = g.Transform;
-            g.Transform = GetTransformMatrix(memo);
-            GetReference().Draw(depth, g);
-            g.Transform = memo;
+            Matrix mx = TransformMatrix;
+            mx.Multiply(m);
+            return GetReference().MeasureSize(depth, mx, editMode);
         }
 
-        public override void EditDraw(int depth, Graphics g)
+        private static void DrawArrow(Graphics g, Matrix m)
         {
-            Matrix memo = g.Transform;
-            g.Transform = GetTransformMatrix(memo);
-            GetReference().EditDraw(depth, g);
-            if (depth <= 1)
-                DrawArrow(g);
-            g.Transform = memo;
-        }
-
-        private static void DrawArrow(Graphics g)
-        {
-            g.DrawLine(Pens.Green, new Point(0, 0), new Point(0, 20));
-            g.DrawLine(Pens.Green, new Point(0, 20), new Point(2, 15));
-            g.DrawLine(Pens.Green, new Point(0, 20), new Point(-2, 15));
-        }
-
-        public override RectangleF MeasureSize(int depth, Matrix m)
-        {
-            Region = GetReference().MeasureSize(depth, GetTransformMatrix(m));
-            return Region;
-        }
-
-        public override RectangleF MeasureEditSize(int depth, Matrix m)
-        {
-            Region = GetReference().MeasureEditSize(depth, GetTransformMatrix(m));
-            return Region;
+            PointF[] pts = new PointF[] { new Point(0, 0), new Point(0, 20), new Point(2, 15), new Point(-2, 15) };
+            m.TransformPoints(pts);
+            g.DrawLine(Pens.Green, pts[0], pts[1]);
+            g.DrawLine(Pens.Green, pts[1], pts[2]);
+            g.DrawLine(Pens.Green, pts[1], pts[3]);
         }
 
         private Drawable GetReference()
@@ -80,14 +59,17 @@ namespace InfiniteDraw.Draw.Base
             return reference;
         }
 
-        private Matrix GetTransformMatrix(Matrix b)
+        private Matrix TransformMatrix
         {
-            Matrix m = b.Clone();
-            float scale = (float)BaseTransform.Length;
-            m.Translate((float)Position.X, (float)Position.Y);
-            m.Rotate((float)(Math.Atan2(BaseTransform.Y, BaseTransform.X) * 180.0 / Math.PI));
-            m.Scale(scale, scale);
-            return m;
+            get
+            {
+                Matrix m = new Matrix();
+                float scale = (float)BaseTransform.Length;
+                m.Translate((float)Position.X, (float)Position.Y);
+                m.Rotate((float)(Math.Atan2(BaseTransform.Y, BaseTransform.X) * 180.0 / Math.PI));
+                m.Scale(scale, scale);
+                return m;
+            }
         }
     }
 }

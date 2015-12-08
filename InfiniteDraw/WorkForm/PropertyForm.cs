@@ -23,6 +23,14 @@ namespace InfiniteDraw.WorkForm
 
             elements = es;
             elements.ElementSelected += Elements_ElementSelected;
+            elements.ElementModified += Elements_ElementModified;
+        }
+
+        private void Elements_ElementModified(object sender, ElementEventArgs e)
+        {
+            IPropertyEditable target = e.Drawable as IPropertyEditable;
+            if (target == editableProperties)
+                RefreshTable();
         }
 
         private void Elements_ElementSelected(object sender, ElementEventArgs e)
@@ -58,7 +66,38 @@ namespace InfiniteDraw.WorkForm
                 nameLabel.TextAlign = ContentAlignment.MiddleLeft;
                 propertyNamePanel.Controls.Add(nameLabel);
 
-                propertyValuePanel.Controls.Add(CreateTerm(p));
+                Control ctrl = CreateTerm(p);
+                ctrl.Tag = p;
+                propertyValuePanel.Controls.Add(ctrl);
+            }
+        }
+
+        private void RefreshTable()
+        {
+            foreach (Control ctrl in propertyValuePanel.Controls)
+                RefreshTerm(ctrl);
+        }
+
+        private void RefreshTerm(Control ctrl)
+        {
+            ElementProperty p = ctrl.Tag as ElementProperty;
+            if (p.Type == typeof(string))
+            {
+                TextBox ri = ctrl as TextBox;
+                ri.Text = Convert.ToString(p.Getter());
+            }
+            else if (p.Type == typeof(int) || p.Type == typeof(double) || p.Type == typeof(float))
+            {
+                NumericUpDown ri = ctrl as NumericUpDown;
+                ri.Value = Convert.ToDecimal(p.Getter());
+            }
+            else if (p.Type.IsEnum)
+            {
+                ComboBox ri = ctrl as ComboBox;
+                ri.SelectedValue = p.Getter();
+            }
+            else
+            {
             }
         }
 

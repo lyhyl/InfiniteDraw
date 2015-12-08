@@ -22,7 +22,7 @@ namespace InfiniteDraw.Draw.Base
                         {
                             Position = new Vector(Convert.ToDouble(v), Position.Y);
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         {
                             return false;
                         }
@@ -35,13 +35,26 @@ namespace InfiniteDraw.Draw.Base
                         {
                             Position = new Vector(Position.X, Convert.ToDouble(v));
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         {
                             return false;
                         }
                         return true;
                     },
-                    () => { return Position.Y; }, 0)
+                    () => { return Position.Y; }, 0),
+                    new ElementProperty("Ref", typeof(int),
+                    (v) => {
+                        try
+                        {
+                            Reference = Convert.ToInt32(v);
+                        }
+                        catch(Exception)
+                        {
+                            return false;
+                        }
+                        return true;
+                    },
+                    () => { return Reference; }, 0)
                 };
             }
         }

@@ -47,7 +47,7 @@
             this.viewToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(284, 24);
+            this.mainMenuStrip.Size = new System.Drawing.Size(784, 24);
             this.mainMenuStrip.TabIndex = 0;
             this.mainMenuStrip.Text = "mainMenuStrip";
             // 
@@ -63,13 +63,13 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.openToolStripMenuItem.Text = "&Open";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             // 
             // viewToolStripMenuItem
@@ -87,7 +87,7 @@
             this.elementListToolStripMenuItem.Checked = true;
             this.elementListToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.elementListToolStripMenuItem.Name = "elementListToolStripMenuItem";
-            this.elementListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.elementListToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.elementListToolStripMenuItem.Text = "&Element List";
             this.elementListToolStripMenuItem.Click += new System.EventHandler(this.elementListToolStripMenuItem_Click);
             // 
@@ -96,7 +96,7 @@
             this.toolboxToolStripMenuItem.Checked = true;
             this.toolboxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolboxToolStripMenuItem.Name = "toolboxToolStripMenuItem";
-            this.toolboxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.toolboxToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.toolboxToolStripMenuItem.Text = "&Toolbox";
             // 
             // propertyToolStripMenuItem
@@ -104,7 +104,7 @@
             this.propertyToolStripMenuItem.Checked = true;
             this.propertyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.propertyToolStripMenuItem.Text = "&Property";
             this.propertyToolStripMenuItem.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
             // 
@@ -113,14 +113,14 @@
             this.mainDockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainDockPanel.Location = new System.Drawing.Point(0, 24);
             this.mainDockPanel.Name = "mainDockPanel";
-            this.mainDockPanel.Size = new System.Drawing.Size(284, 237);
+            this.mainDockPanel.Size = new System.Drawing.Size(784, 537);
             this.mainDockPanel.TabIndex = 1;
             // 
             // InfiniteDraw
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.mainDockPanel);
             this.Controls.Add(this.mainMenuStrip);
             this.IsMdiContainer = true;

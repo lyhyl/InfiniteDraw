@@ -21,7 +21,7 @@ namespace InfiniteDraw.Draw.Base
                         {
                             Name = Convert.ToString(v);
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         {
                             return false;
                         }
@@ -35,7 +35,7 @@ namespace InfiniteDraw.Draw.Base
                         {
                             MaxDepth = Convert.ToInt32(v);
                         }
-                        catch(Exception e)
+                        catch(Exception)
                         {
                             return false;
                         }

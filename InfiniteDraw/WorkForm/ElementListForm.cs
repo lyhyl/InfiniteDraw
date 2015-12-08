@@ -44,14 +44,16 @@ namespace InfiniteDraw.WorkForm
         private void newFactorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Prototype f = elements[elements.CreateFactor()] as Prototype;
-            int bezier = elements.CreateBezier();
-            RefElement re = elements[elements.CreateRefElement(bezier)] as RefElement;
-            f.AddElement(re);
+
             RefElement re2 = elements[elements.CreateRefElement(f.GID)] as RefElement;
             Vector v = new Vector(2, 1);
             v.Normalize();
             re2.BaseTransform = v * .6;
             f.AddElement(re2);
+
+            int bezier = elements.CreateBezier();
+            RefElement re = elements[elements.CreateRefElement(bezier)] as RefElement;
+            f.AddElement(re);
         }
 
         private void deleteElementToolStripMenuItem_Click(object sender, EventArgs e)

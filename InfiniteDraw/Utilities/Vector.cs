@@ -36,6 +36,8 @@ namespace InfiniteDraw.Utilities
         public static Vector operator *(double f, Vector v) => new Vector(v.X * f, v.Y * f);
         public static double operator *(Vector a, Vector b) => a.X * b.X + a.Y * b.Y;
         public static Vector operator /(Vector v, double f) => new Vector(v.X / f, v.Y / f);
+
+        public override string ToString() => $"<{X},{Y}>";
     }
 
     public static class VectorConvert

@@ -1,33 +1,59 @@
 ﻿using InfiniteDraw.Utilities;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfiniteDraw.Draw.Bezier
 {
     public class BezierSolver
     {
-        public static Vector Interpolate(Vector a, Vector b, Vector c, Vector d, double t)
+        public static Vector Interpolate(Vector[] v, int offest, double t)
         {
-            double it = 1 - t;
-            return it * it * it * a + 3 * it * it * t * b + 3 * it * t * t * c + t * t * t * d;
+            double s = 1 - t;
+            Vector t0 = s * s * s * v[0 + offest];
+            Vector t1 = s * s * t * v[1 + offest];
+            Vector t2 = s * t * t * v[2 + offest];
+            Vector t3 = t * t * t * v[3 + offest];
+            return t0 + 3 * t1 + 3 * t2 + t3;
         }
 
-        public static Vector Tanget(Vector a, Vector b, Vector c, Vector d, double t)
+        public static Vector Interpolate(List<Vector> v, int offest, double t)
         {
-            double it = 1 - t;
-            return 3 * it * it * (b - a) + 6 * it * t * (c - b) + 3 * t * t * (d - c);
+            double s = 1 - t;
+            Vector t0 = s * s * s * v[0 + offest];
+            Vector t1 = s * s * t * v[1 + offest];
+            Vector t2 = s * t * t * v[2 + offest];
+            Vector t3 = t * t * t * v[3 + offest];
+            return t0 + 3 * t1 + 3 * t2 + t3;
         }
 
-        public static PointF[] Divide(Vector a, Vector b, Vector c, Vector d, int prec)
+        public static Vector Tanget(Vector[] v, int offest, double t)
         {
-            PointF[] points = new PointF[prec + 1];
-            points[0] = a.ToPointF();
-            for (int i = 1; i <= prec; i++)
-                points[i] = Interpolate(a, b, c, d, (double)i / prec).ToPointF();
+            double s = 1 - t;
+            Vector t0 = s * s * (v[1 + offest] - v[0 + offest]);
+            Vector t1 = s * t * (v[2 + offest] - v[1 + offest]);
+            Vector t2 = t * t * (v[3 + offest] - v[2 + offest]);
+            return 3 * t0 + 6 * t1 + 3 * t2;
+        }
+
+        public static PointF[] Divide(Vector[] v, int offset, int seg)
+        {
+            PointF[] points = new PointF[seg + 1];
+            for (int i = 0; i <= seg; i++)
+            {
+                Vector tv = Interpolate(v, offset, (double)i / seg);
+                points[i] = tv.ToPointF();
+            }
+            return points;
+        }
+
+        public static PointF[] Divide(List<Vector> v, int offset, int seg)
+        {
+            PointF[] points = new PointF[seg + 1];
+            for (int i = 0; i <= seg; i++)
+            {
+                Vector tv = Interpolate(v, offset, (double)i / seg);
+                points[i] = tv.ToPointF();
+            }
             return points;
         }
     }

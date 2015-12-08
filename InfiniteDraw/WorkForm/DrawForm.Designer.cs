@@ -39,14 +39,14 @@
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editViewToolStripMenuItem});
             this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(153, 48);
+            this.contextMenu.Size = new System.Drawing.Size(123, 26);
             // 
             // editViewToolStripMenuItem
             // 
             this.editViewToolStripMenuItem.Checked = true;
             this.editViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.editViewToolStripMenuItem.Name = "editViewToolStripMenuItem";
-            this.editViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.editViewToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.editViewToolStripMenuItem.Text = "&Edit View";
             this.editViewToolStripMenuItem.Click += new System.EventHandler(this.editViewToolStripMenuItem_Click);
             // 
@@ -57,6 +57,7 @@
             this.DockAreas = ((WeifenLuo.WinFormsUI.Docking.DockAreas)((WeifenLuo.WinFormsUI.Docking.DockAreas.Float | WeifenLuo.WinFormsUI.Docking.DockAreas.Document)));
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.KeyPreview = true;
             this.Name = "DrawForm";
             this.Text = "Element";
             this.contextMenu.ResumeLayout(false);
