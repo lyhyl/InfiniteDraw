@@ -8,18 +8,18 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace InfiniteDraw.WorkForm
 {
-    public partial class ElementListForm : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class ElementListForm : DockContent
     {
-        private ElementStorage elements;
+        private ElementStorage elements = ElementStorage.Instance;
 
-        public ElementListForm(ElementStorage es)
+        public ElementListForm()
         {
             InitializeComponent();
-
-            elements = es;
+            
             elements.ElementCreated += ElementStorage_ElementCreated;
             elements.ElementDeleted += ElementStorage_ElementDeleted;
         }

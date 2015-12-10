@@ -7,33 +7,32 @@ namespace InfiniteDraw.Draw.Base
 {
     public partial class RefElement : Drawable
     {
-        private ElementStorage elements;
+        private ElementStorage elements = ElementStorage.Instance;
 
         public int Reference { set; get; }
         public Vector Position { set; get; } = Vector.Zero;
         public Vector BaseTransform { set; get; } = Vector.XAxis;
 
-        public RefElement(ElementStorage es, int r)
+        public RefElement(int r)
         {
-            elements = es;
             Reference = r;
         }
 
-        public override void Draw(Graphics g, int depth, Matrix m, WorkMode editMode)
+        public override void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
             Matrix mx = TransformMatrix;
             mx.Multiply(m);
-            GetReference().Draw(g, depth, mx, editMode);
+            GetReference().Draw(g, depth, mx, workMode);
 
-            if (editMode == WorkMode.Edit && depth <= 1)
+            if (workMode == WorkMode.Edit && depth <= 1)
                 DrawArrow(g, mx);
         }
 
-        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode editMode)
+        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
         {
             Matrix mx = TransformMatrix;
             mx.Multiply(m);
-            return GetReference().MeasureSize(depth, mx, editMode);
+            return GetReference().MeasureSize(depth, mx, workMode);
         }
 
         private static void DrawArrow(Graphics g, Matrix m)

@@ -12,17 +12,20 @@ namespace InfiniteDraw.Edit.Draw
     public interface IEditable
     {
         IEnumerable<IDraggableComponent> Components { get; }
-        EditableMenuItem[] EditMenu { get; }
-        void ModifiedComponent(int index);
-        void DeleteComponent(int index);
-        EditState CreateComponentMouseDown(Vector position);
-        EditState CreateComponentMouseMove(Vector position);
-        EditState CreateComponentMouseUp(Vector position);
+        EditableToolItem[] EditMenu { get; }
+        EditState EditComponentMouseDown(Vector position, MouseButtons button);
+        EditState EditComponentMouseMove(Vector position);
+        EditState EditComponentMouseUp(Vector position, MouseButtons button);
     }
-    public class EditableMenuItem
+    public class EditableToolItem
     {
         public string Name { set; get; }
-        public Action Callback;
+        public Action Callback { set; get; }
+        public EditableToolItem(string name, Action callback)
+        {
+            Name = name;
+            Callback = callback;
+        }
     }
-    public enum EditState { Editing, Ended, Quest }
+    public enum EditState { Editing, Ended }
 }

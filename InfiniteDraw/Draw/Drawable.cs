@@ -10,11 +10,11 @@ namespace InfiniteDraw.Draw
 
         public int GID { get; } = AutoCount++;
 
-        public abstract RectangleF MeasureSize(int depth, Matrix m, WorkMode editMode);
-        public abstract void Draw(Graphics graphics, int depth, Matrix m, WorkMode editMode);
+        public abstract RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode);
+        public abstract void Draw(Graphics graphics, int depth, Matrix m, WorkMode workMode);
 
-        public RectangleF MeasureSize(WorkMode editMode) => MeasureSize(0, new Matrix(), editMode);
-        public void Draw(Graphics graphics, WorkMode editMode) => Draw(graphics, 0, new Matrix(), editMode);
+        public RectangleF MeasureSize(WorkMode workMode) => MeasureSize(0, new Matrix(), workMode);
+        public void Draw(Graphics graphics, WorkMode workMode) => Draw(graphics, 0, new Matrix(), workMode);
 
         public override string ToString() => GID.ToString();
     }

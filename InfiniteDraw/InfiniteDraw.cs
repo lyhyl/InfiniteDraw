@@ -18,6 +18,7 @@ namespace InfiniteDraw
         private ElementListForm elementListForm = null;
         private PropertyForm propertyForm = null;
         private DrawForms drawForms = null;
+        private ToolsForm toolsForm = null;
 
         public InfiniteDraw()
         {
@@ -33,40 +34,41 @@ namespace InfiniteDraw
 
         private void InitializeForm()
         {
-            elementListForm = new ElementListForm(elements);
-            propertyForm = new PropertyForm(elements);
-            drawForms = new DrawForms(elements, mainDockPanel);
+            elementListForm = new ElementListForm();
+            propertyForm = new PropertyForm();
+            drawForms = new DrawForms(mainDockPanel);
+            toolsForm = new ToolsForm();
 
             elementListForm.Show(mainDockPanel, DockState.DockRight);
             propertyForm.Show(mainDockPanel.ActivePane, DockAlignment.Bottom, .5);
+            toolsForm.Show(mainDockPanel, DockState.DockLeft);
 
             elementListForm.VisibleChanged += (s, e) => { elementListToolStripMenuItem.Checked = elementListForm.Visible; };
             propertyForm.VisibleChanged += (s, e) => { propertyToolStripMenuItem.Checked = propertyForm.Visible; };
+            toolsForm.VisibleChanged += (s, e) => { toolboxToolStripMenuItem.Checked = toolsForm.Visible; };
 
             elementListToolStripMenuItem.Checked = true;
             propertyToolStripMenuItem.Checked = true;
+            toolboxToolStripMenuItem.Checked = true;
+
+            elementListToolStripMenuItem.Tag = elementListForm;
+            propertyToolStripMenuItem.Tag = propertyForm;
+            toolboxToolStripMenuItem.Tag = toolsForm;
         }
 
-        private void elementListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void formViewVisibleMenuItem_Click(object sender, EventArgs e)
         {
-            bool state = elementListToolStripMenuItem.Checked;
-            state = !state;
-            elementListToolStripMenuItem.Checked = state;
-            if (state)
-                elementListForm.Show();
-            else
-                elementListForm.Hide();
-        }
-
-        private void propertyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            bool state = propertyToolStripMenuItem.Checked;
-            state = !state;
-            propertyToolStripMenuItem.Checked = state;
-            if (state)
-                propertyForm.Show();
-            else
-                propertyForm.Hide();
+            ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+            if (menuItem != null)
+            {
+                bool state = menuItem.Checked;
+                state = !state;
+                menuItem.Checked = !state;
+                if (state)
+                    (menuItem.Tag as DockContent)?.Show();
+                else
+                    (menuItem.Tag as DockContent)?.Hide();
+            }
         }
     }
 }

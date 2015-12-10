@@ -14,30 +14,28 @@ namespace InfiniteDraw.Draw.Bezier
         private const int defaultPrecision = 24;
 
         private List<Vector> controlPoints = new List<Vector>();
+        private List<ControlPoint> componentProxies = new List<ControlPoint>();
 
         public string Name { set; get; } = defaultName;
         public int Precision { set; get; } = defaultPrecision;
 
         public Bezier3()
         {
-            controlPoints.Add(new Vector(-50, -50));
-            controlPoints.Add(new Vector(0, -50));
-            controlPoints.Add(new Vector(50, 0));
-            controlPoints.Add(new Vector(50, 50));
+            AddControlPoint(new Vector(-100, -50));
+            AddControlPoint(new Vector(-50, -50));
+            AddControlPoint(new Vector(0, -50));
+            AddControlPoint(new Vector(50, 0));
+            AddControlPoint(new Vector(50, 50));
+            AddControlPoint(new Vector(50, 100));
         }
 
-        public void Update(IEnumerable<Vector> vs)
+        public override void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
-            controlPoints = new List<Vector>(vs);
-        }
-
-        public override void Draw(Graphics g, int depth, Matrix m, WorkMode editMode)
-        {
-            switch (editMode)
+            switch (workMode)
             {
                 case WorkMode.Edit:
                     DrawBase(g, m);
-                    DrawExtend(g, depth, m, editMode);
+                    DrawExtend(g, depth, m, workMode);
                     break;
                 case WorkMode.Render:
                     DrawBase(g, m);
@@ -51,7 +49,7 @@ namespace InfiniteDraw.Draw.Bezier
         {
             int DivSeg = GetPrecision();
             Pen pen = new Pen(Color.Black, 1);
-            for (int i = 0; i + 3 < controlPoints.Count; i += 4)
+            for (int i = 1; i + 3 < controlPoints.Count; i += 3)
             {
                 PointF[] pts = BezierSolver.Divide(controlPoints, i, DivSeg);
                 m.TransformPoints(pts);
@@ -59,7 +57,7 @@ namespace InfiniteDraw.Draw.Bezier
             }
         }
 
-        private void DrawExtend(Graphics g, int depth, Matrix m, WorkMode editMode)
+        private void DrawExtend(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
             Pen pen = new Pen(Color.Red, 0.25f);
 
@@ -69,11 +67,17 @@ namespace InfiniteDraw.Draw.Bezier
             foreach (var p in cps)
                 g.DrawEllipse(pen, p.X - 1, p.Y - 1, 2, 2);
 
-            RectangleF box = MeasureSize(depth, m, editMode);
+            for (int i = 0; i + 2 < cps.Length; i += 3)
+            {
+                g.DrawLine(pen, cps[i], cps[i + 1]);
+                g.DrawLine(pen, cps[i + 1], cps[i + 2]);
+            }
+
+            RectangleF box = MeasureSize(depth, m, workMode);
             g.DrawRectangle(pen, box.Left, box.Top, box.Width, box.Height);
         }
 
-        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode editMode)
+        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
         {
             /// TODO : Dynamic Width
             const float MaxWidth = 1;
@@ -99,6 +103,12 @@ namespace InfiniteDraw.Draw.Bezier
         private int GetPrecision()
         {
             return Precision;
+        }
+
+        private void AddControlPoint(Vector position)
+        {
+            componentProxies.Add(new ControlPoint(this, controlPoints.Count));
+            controlPoints.Add(position);
         }
 
         public override string ToString() => Name + base.ToString();

@@ -9,19 +9,19 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace InfiniteDraw.WorkForm
 {
-    public partial class PropertyForm : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class PropertyForm : DockContent
     {
-        private ElementStorage elements;
+        private ElementStorage elements = ElementStorage.Instance;
         private IPropertyEditable editableProperties;
 
-        public PropertyForm(ElementStorage es)
+        public PropertyForm()
         {
             InitializeComponent();
-
-            elements = es;
+            
             elements.ElementSelected += Elements_ElementSelected;
             elements.ElementModified += Elements_ElementModified;
         }

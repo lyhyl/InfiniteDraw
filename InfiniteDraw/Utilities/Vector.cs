@@ -43,5 +43,6 @@ namespace InfiniteDraw.Utilities
     public static class VectorConvert
     {
         public static PointF ToPointF(this Vector v) => new PointF((float)v.X, (float)v.Y);
+        public static Vector ToVector(this PointF v) => new Vector(v.X, v.Y);
     }
 }

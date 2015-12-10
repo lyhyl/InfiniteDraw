@@ -11,12 +11,13 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace InfiniteDraw.WorkForm
 {
-    public partial class DrawForm : WeifenLuo.WinFormsUI.Docking.DockContent
+    public partial class DrawForm : DockContent
     {
-        private ElementStorage elements;
+        private ElementStorage elements = ElementStorage.Instance;
         private Vector offset = Vector.Zero;
         private int scale = 100;
         private double scalep => scale / 100.0;
@@ -30,16 +31,27 @@ namespace InfiniteDraw.WorkForm
 
         public Drawable Drawable { private set; get; }
 
-        public DrawForm(ElementStorage es, Drawable d)
+        private Matrix DrawingSpaceMatrix
+        {
+            get
+            {
+                Matrix m = new Matrix();
+                m.Translate(ClientSize.Width / 2.0f, ClientSize.Height / 2.0f);
+                m.Scale(1, -1);
+                m.Translate((float)(offset.X * scalep), (float)(offset.Y * scalep));
+                return m;
+            }
+        }
+
+        public DrawForm(Drawable d)
         {
             InitializeComponent();
-            InitializeElement(es, d);
+            InitializeElement(d);
             RegisterEvents();
         }
 
-        private void InitializeElement(ElementStorage es, Drawable d)
+        private void InitializeElement(Drawable d)
         {
-            elements = es;
             Drawable = d;
             Text = d.ToString();
         }
@@ -75,11 +87,16 @@ namespace InfiniteDraw.WorkForm
                 DrawArtImage();
             if (!adjustedCanvas.IsEmpty)
             {
-                e.Graphics.TranslateTransform(ClientSize.Width / 2.0f, ClientSize.Height / 2.0f);
-                e.Graphics.TranslateTransform(adjustedCanvas.Left, adjustedCanvas.Top);
-                e.Graphics.TranslateTransform((float)(offset.X * scalep), (float)(offset.Y * scalep));
-                e.Graphics.DrawImage(art, new Point());
+                e.Graphics.Transform = DrawingSpaceMatrix;
+                DrawAxes(e.Graphics);
+                e.Graphics.DrawImage(art, new Point(adjustedCanvas.Left, adjustedCanvas.Top));
             }
+        }
+
+        private void DrawAxes(Graphics g)
+        {
+            g.DrawLine(Pens.Red, new Point(0, 0), new Point(0, ClientSize.Height));
+            g.DrawLine(Pens.Green, new Point(0, 0), new Point(ClientSize.Width, 0));
         }
 
         private void DrawArtImage()
@@ -122,11 +139,8 @@ namespace InfiniteDraw.WorkForm
             g.TextRenderingHint = TextRenderingHint.AntiAlias;
 
             Matrix trans = new Matrix();
-
-            float s = (float)scalep;
             trans.Translate(-adjustedCanvas.Left, -adjustedCanvas.Top);
-            trans.Scale(s, s);
-
+            trans.Scale((float)scalep, (float)scalep);
             g.Transform = trans;
 
             return g;
@@ -143,6 +157,13 @@ namespace InfiniteDraw.WorkForm
         {
             editViewToolStripMenuItem.Checked = !editViewToolStripMenuItem.Checked;
             renderView = !editViewToolStripMenuItem.Checked;
+            InvalidateArt(true);
+        }
+
+        private void resetViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            offset = Vector.Zero;
+            scale = 100;
             InvalidateArt(true);
         }
     }

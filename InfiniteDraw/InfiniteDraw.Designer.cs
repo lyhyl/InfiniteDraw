@@ -87,26 +87,27 @@
             this.elementListToolStripMenuItem.Checked = true;
             this.elementListToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.elementListToolStripMenuItem.Name = "elementListToolStripMenuItem";
-            this.elementListToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.elementListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.elementListToolStripMenuItem.Text = "&Element List";
-            this.elementListToolStripMenuItem.Click += new System.EventHandler(this.elementListToolStripMenuItem_Click);
+            this.elementListToolStripMenuItem.Click += new System.EventHandler(this.formViewVisibleMenuItem_Click);
             // 
             // toolboxToolStripMenuItem
             // 
             this.toolboxToolStripMenuItem.Checked = true;
             this.toolboxToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolboxToolStripMenuItem.Name = "toolboxToolStripMenuItem";
-            this.toolboxToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.toolboxToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.toolboxToolStripMenuItem.Text = "&Toolbox";
+            this.toolboxToolStripMenuItem.Click += new System.EventHandler(this.formViewVisibleMenuItem_Click);
             // 
             // propertyToolStripMenuItem
             // 
             this.propertyToolStripMenuItem.Checked = true;
             this.propertyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.propertyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.propertyToolStripMenuItem.Text = "&Property";
-            this.propertyToolStripMenuItem.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
+            this.propertyToolStripMenuItem.Click += new System.EventHandler(this.formViewVisibleMenuItem_Click);
             // 
             // mainDockPanel
             // 

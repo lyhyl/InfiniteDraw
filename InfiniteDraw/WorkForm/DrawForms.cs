@@ -8,12 +8,11 @@ namespace InfiniteDraw.WorkForm
     public class DrawForms
     {
         private Dictionary<Drawable, DrawForm> forms = new Dictionary<Drawable, DrawForm>();
-        private ElementStorage elements;
+        private ElementStorage elements = ElementStorage.Instance;
         private DockPanel panel;
 
-        public DrawForms(ElementStorage es, DockPanel dp)
+        public DrawForms(DockPanel dp)
         {
-            elements = es;
             panel = dp;
             
             elements.ElementDeleted += ElementStorage_ElementDeleted;
@@ -24,7 +23,7 @@ namespace InfiniteDraw.WorkForm
         {
             if (!forms.ContainsKey(e.Drawable))
             {
-                DrawForm drawForm = new DrawForm(elements, e.Drawable);
+                DrawForm drawForm = new DrawForm(e.Drawable);
                 drawForm.FormClosed += (s, a) => { forms.Remove(e.Drawable); };
                 forms[e.Drawable] = drawForm;
                 drawForm.Show(panel);

@@ -1,9 +1,4 @@
 ﻿using InfiniteDraw.Edit.Draw;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using InfiniteDraw.Utilities;
 using System.Drawing;
 
@@ -13,23 +8,46 @@ namespace InfiniteDraw.Draw.Bezier
     {
         private partial class ControlPoint : IDraggableComponent
         {
-            private int index;
+            public int Index { set; get; }
+            public Bezier3 Curve { set; get; }
 
             public RectangleF Region
             {
                 get
                 {
-                    return RectangleF.Empty;
+                    const float size = 6, hsize = size / 2;
+                    Vector pos = Curve.controlPoints[Index];
+                    return new RectangleF((float)(pos.X - hsize), (float)(pos.Y - hsize), size, size);
                 }
             }
 
-            public ControlPoint(int idx)
+            public ControlPoint(Bezier3 curve, int index)
             {
-                index = idx;
+                Curve = curve;
+                Index = index;
             }
 
-            public void Drag(Vector delta)
+            public void Drag(Vector delta) => AdjustRelativePoints(delta);
+
+            internal void DragTo(Vector position) => Drag(position - Curve.controlPoints[Index]);
+
+            private void AdjustRelativePoints(Vector delta)
             {
+                switch (Index % 3)
+                {
+                    case 0:
+                        Curve.controlPoints[Index] += delta;
+                        Curve.controlPoints[Index + 2] -= delta;
+                        break;
+                    case 1:
+                        for (int i = -1; i <= 1; i++)
+                            Curve.controlPoints[Index + i] += delta;
+                        break;
+                    case 2:
+                        Curve.controlPoints[Index] += delta;
+                        Curve.controlPoints[Index - 2] -= delta;
+                        break;
+                }
             }
         }
     }

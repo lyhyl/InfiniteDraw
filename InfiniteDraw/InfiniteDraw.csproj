@@ -63,6 +63,7 @@
     <Compile Include="Draw\Base\RefElement.Edit.cs" />
     <Compile Include="Draw\Base\RefElement.Property.cs" />
     <Compile Include="Draw\Bezier\Bezier3.ControlPoint.cs" />
+    <Compile Include="Draw\Bezier\Bezier3.Edit.cs" />
     <Compile Include="Draw\Drawable.cs" />
     <Compile Include="Draw\Base\Prototype.cs" />
     <Compile Include="Edit\Draw\IDraggableComponent.cs" />
@@ -70,11 +71,8 @@
     <Compile Include="Draw\Base\RefElement.cs" />
     <Compile Include="Edit\Property\ElementProperty.cs" />
     <Compile Include="Edit\Property\IPropertyEditable.cs" />
-    <Compile Include="InfiniteDraw.Logical.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Draw\Bezier\BezierSolver.cs" />
-    <Compile Include="Draw\Base\ElementStorage.cs" />
+    <Compile Include="Draw\ElementStorage.cs" />
     <Compile Include="Utilities\Vector.cs" />
     <Compile Include="WorkForm\DrawForm.cs">
       <SubType>Form</SubType>
@@ -107,6 +105,12 @@
     <Compile Include="WorkForm\PropertyForm.Designer.cs">
       <DependentUpon>PropertyForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="WorkForm\ToolsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WorkForm\ToolsForm.Designer.cs">
+      <DependentUpon>ToolsForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="InfiniteDraw.resx">
       <DependentUpon>InfiniteDraw.cs</DependentUpon>
     </EmbeddedResource>
@@ -128,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WorkForm\PropertyForm.resx">
       <DependentUpon>PropertyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WorkForm\ToolsForm.resx">
+      <DependentUpon>ToolsForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

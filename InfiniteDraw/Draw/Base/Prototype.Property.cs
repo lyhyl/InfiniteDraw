@@ -9,41 +9,55 @@ namespace InfiniteDraw.Draw.Base
 {
     public partial class Prototype : IPropertyEditable
     {
+        private bool elementPropertyCreated = false;
+
+        private ElementProperty nameElementProperty;
+        private bool NameSetter(object v)
+        {
+            try
+            {
+                Name = Convert.ToString(v);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private ElementProperty maxDepthElementProperty;
+        private bool MaxDepthSetter(object v)
+        {
+            try
+            {
+                MaxDepth = Convert.ToInt32(v);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public ElementProperty[] EditableProperties
         {
             get
             {
+                if (!elementPropertyCreated)
+                    CreateElementProperty();
                 return new ElementProperty[]
                 {
-                    new ElementProperty("Name", typeof(string),
-                    (v) => {
-                        try
-                        {
-                            Name = Convert.ToString(v);
-                        }
-                        catch(Exception)
-                        {
-                            return false;
-                        }
-                        return true;
-                    },
-                    () => { return Name; }, defaultName),
-
-                    new ElementProperty("Max Depth", typeof(int),
-                    (v) => {
-                        try
-                        {
-                            MaxDepth = Convert.ToInt32(v);
-                        }
-                        catch(Exception)
-                        {
-                            return false;
-                        }
-                        return true;
-                    },
-                    () => { return MaxDepth; }, defaultMaxDepth)
+                    nameElementProperty,
+                    maxDepthElementProperty
                 };
             }
+        }
+
+        private void CreateElementProperty()
+        {
+            elementPropertyCreated = true;
+            nameElementProperty = new ElementProperty("Name", typeof(string), NameSetter, () => Name, defaultName);
+            maxDepthElementProperty = new ElementProperty("Max Depth", typeof(int), MaxDepthSetter, () => MaxDepth, defaultMaxDepth);
         }
     }
 }

@@ -17,26 +17,24 @@ namespace InfiniteDraw.Draw.Base
         {
         }
 
-        public override void Draw(Graphics g, int depth, Matrix m, WorkMode editMode)
+        public override void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
-            if (depth >= DepthControl(editMode))
+            if (depth >= DepthControl(workMode))
                 return;
             foreach (var e in elements)
-                e.Draw(g, depth + 1, m, editMode);
-            if (depth == 0)
-                DrawAxes(g, m, editMode);
+                e.Draw(g, depth + 1, m, workMode);
         }
 
-        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode editMode)
+        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
         {
-            if (depth >= DepthControl(editMode) || elements.Count == 0)
+            if (depth >= DepthControl(workMode) || elements.Count == 0)
                 return RectangleF.Empty;
-            return NonEmptySize(depth, m, editMode);
+            return NonEmptySize(depth, m, workMode);
         }
 
-        private int DepthControl(WorkMode editMode)
+        private int DepthControl(WorkMode workMode)
         {
-            switch (editMode)
+            switch (workMode)
             {
                 case WorkMode.Edit:
                     return 2;
@@ -47,25 +45,19 @@ namespace InfiniteDraw.Draw.Base
             }
         }
 
-        private RectangleF NonEmptySize(int depth, Matrix m, WorkMode editMode)
+        private RectangleF NonEmptySize(int depth, Matrix m, WorkMode workMode)
         {
             int idx = 0;
-            RectangleF size = elements[idx].MeasureSize(depth + 1, m, editMode);
+            RectangleF size = elements[idx].MeasureSize(depth + 1, m, workMode);
             for (; size.IsEmpty && idx < elements.Count; idx++)
-                size = elements[idx].MeasureSize(depth + 1, m, editMode);
+                size = elements[idx].MeasureSize(depth + 1, m, workMode);
             for (; idx < elements.Count; idx++)
             {
-                RectangleF sz = elements[idx].MeasureSize(depth + 1, m, editMode);
+                RectangleF sz = elements[idx].MeasureSize(depth + 1, m, workMode);
                 if (!sz.IsEmpty)
                     size = RectangleF.Union(size, sz);
             }
             return size;
-        }
-        
-        private void DrawAxes(Graphics g, Matrix m, WorkMode editMode)
-        {
-            g.DrawLine(Pens.Red, new Point(0, 0), new Point(0, 100));
-            g.DrawLine(Pens.Green, new Point(0, 0), new Point(100, 0));
         }
 
         public void AddElement(RefElement re)
