@@ -1,6 +1,6 @@
 ﻿namespace InfiniteDraw.WorkForm
 {
-    partial class DrawForm
+    partial class DisplayForm
     {
         /// <summary>
         /// Required designer variable.

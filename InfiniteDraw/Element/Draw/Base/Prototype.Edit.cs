@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 using InfiniteDraw.Utilities;
 using System.Windows.Forms;
 
-namespace InfiniteDraw.Draw.Base
+namespace InfiniteDraw.Element.Draw.Base
 {
     public partial class Prototype : IEditable
     {
         private bool addRef = false;
 
-        public IEnumerable<IDraggableComponent> Components => elements;
-
         private bool toolItemsCreated = false;
         private EditableToolItem addRefToolItem;
+
+        public IEnumerable<IDraggableComponent> Components => elements;
 
         public EditableToolItem[] EditMenu
         {
@@ -26,12 +26,6 @@ namespace InfiniteDraw.Draw.Base
                     CreateToolItems();
                 return new EditableToolItem[] { addRefToolItem };
             }
-        }
-
-        private void CreateToolItems()
-        {
-            toolItemsCreated = true;
-            addRefToolItem = new EditableToolItem("Add Ref", () => { addRef = true; });
         }
 
         public EditState EditComponentMouseDown(Vector position, MouseButtons button)
@@ -56,6 +50,12 @@ namespace InfiniteDraw.Draw.Base
         public EditState EditComponentMouseUp(Vector position, MouseButtons button)
         {
             return EditState.Ended;
+        }
+
+        private void CreateToolItems()
+        {
+            toolItemsCreated = true;
+            addRefToolItem = new EditableToolItem("Add Ref", () => { addRef = true; });
         }
     }
 }

@@ -1,14 +1,6 @@
-﻿using InfiniteDraw.Draw;
-using InfiniteDraw.Draw.Base;
-using InfiniteDraw.Edit.Draw;
+﻿using InfiniteDraw.Edit.Draw;
+using InfiniteDraw.Element.Draw;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -16,26 +8,30 @@ namespace InfiniteDraw.WorkForm
 {
     public partial class ToolsForm : DockContent
     {
-        private ElementStorage elements = ElementStorage.Instance;
         private IEditable editable;
         private EditableToolItem[] items;
 
         public ToolsForm()
         {
             InitializeComponent();
-            elements.ElementSelected += Elements_ElementSelected;
+            ElementStorage.Instance.ElementAdded += Elements_ElementAdded;
         }
 
-        private void Elements_ElementSelected(object sender, ElementEventArgs e)
+        private void Elements_ElementAdded(object sender, ElementStorageEventArgs e)
         {
-            IEditable edit = e.Drawable as IEditable;
-            if (edit == editable)
+            e.Element.Actived += Element_Actived;
+        }
+
+        private void Element_Actived(object sender, EventArgs e)
+        {
+            IEditable target = sender as IEditable;
+            if (target == editable)
                 return;
-            editable = edit;
+            editable = target;
             ClearItems();
             if (editable != null)
             {
-                items = edit.EditMenu;
+                items = editable.EditMenu;
                 RecreateItems();
             }
         }

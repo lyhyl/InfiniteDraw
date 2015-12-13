@@ -1,23 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace InfiniteDraw.Draw.Base
+namespace InfiniteDraw.Element.Draw.Base
 {
-    public partial class Prototype : Drawable
+    public partial class Prototype : IDrawable
     {
         private const string defaultName = nameof(Prototype);
         private const int defaultMaxDepth = 8;
         private List<RefElement> elements = new List<RefElement>();
 
+        public int GID { set; get; }
+
         public int MaxDepth { set; get; } = defaultMaxDepth;
         public string Name { set; get; } = defaultName;
+
+        public event EventHandler Modified;
+        public event EventHandler Actived;
 
         public Prototype()
         {
         }
 
-        public override void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
+        public void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
             if (depth >= DepthControl(workMode))
                 return;
@@ -25,11 +31,29 @@ namespace InfiniteDraw.Draw.Base
                 e.Draw(g, depth + 1, m, workMode);
         }
 
-        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
+        public RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
         {
             if (depth >= DepthControl(workMode) || elements.Count == 0)
                 return RectangleF.Empty;
             return NonEmptySize(depth, m, workMode);
+        }
+
+        public void Active()
+        {
+            Actived?.Invoke(this, new EventArgs());
+        }
+
+        public void AddElement(RefElement re)
+        {
+            elements.Add(re);
+            OnModified();
+        }
+
+        public override string ToString() => Name + base.ToString();
+
+        protected void OnModified()
+        {
+            Modified?.Invoke(this, new EventArgs());
         }
 
         private int DepthControl(WorkMode workMode)
@@ -59,12 +83,5 @@ namespace InfiniteDraw.Draw.Base
             }
             return size;
         }
-
-        public void AddElement(RefElement re)
-        {
-            elements.Add(re);
-        }
-
-        public override string ToString() => Name + base.ToString();
     }
 }

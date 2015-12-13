@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfiniteDraw.Draw.Base
+namespace InfiniteDraw.Element.Draw.Base
 {
     public partial class Prototype : IPropertyEditable
     {

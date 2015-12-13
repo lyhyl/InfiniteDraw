@@ -2,14 +2,15 @@
 using InfiniteDraw.Utilities;
 using System.Drawing;
 
-namespace InfiniteDraw.Draw.Bezier
+namespace InfiniteDraw.Element.Draw.Bezier
 {
     public partial class Bezier3
     {
         private partial class ControlPoint : IDraggableComponent
         {
-            public int Index { set; get; }
             public Bezier3 Curve { set; get; }
+            public int Index { set; get; }
+            public Vector Position { set; get; }
 
             public RectangleF Region
             {
@@ -29,7 +30,7 @@ namespace InfiniteDraw.Draw.Bezier
 
             public void Drag(Vector delta) => AdjustRelativePoints(delta);
 
-            internal void DragTo(Vector position) => Drag(position - Curve.controlPoints[Index]);
+            internal void DragTo(Vector position) => AdjustRelativePoints(position - Curve.controlPoints[Index]);
 
             private void AdjustRelativePoints(Vector delta)
             {
@@ -48,6 +49,7 @@ namespace InfiniteDraw.Draw.Bezier
                         Curve.controlPoints[Index - 2] -= delta;
                         break;
                 }
+                Curve.OnModified();
             }
         }
     }

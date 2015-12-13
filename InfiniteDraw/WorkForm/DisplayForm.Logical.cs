@@ -1,5 +1,5 @@
-﻿using InfiniteDraw.Draw;
-using InfiniteDraw.Edit.Draw;
+﻿using InfiniteDraw.Edit.Draw;
+using InfiniteDraw.Element.Draw;
 using InfiniteDraw.Utilities;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace InfiniteDraw.WorkForm
 {
-    public partial class DrawForm
+    public partial class DisplayForm
     {
         private bool draggingCavans = false;
         private PointF prvMousePosition = Point.Empty;
@@ -17,7 +17,7 @@ namespace InfiniteDraw.WorkForm
         private IEnumerable<IDraggableComponent> componentRegions;
         private IDraggableComponent draggingComponent;
 
-        private IEditable Editable => Drawable as IEditable;
+        private IEditable Editable => Element as IEditable;
         private EditState editState = EditState.Ended;
 
         private void DrawForm_MouseDown(object sender, MouseEventArgs e)
@@ -64,7 +64,7 @@ namespace InfiniteDraw.WorkForm
             {
                 InvalidateArt(true);
                 draggingComponent.Drag(new Vector(dx, dy));
-                elements.Modified(draggingComponent as Drawable);
+                //elements.Modified(draggingComponent as IElement);
             }
             switch (editState)
             {
@@ -117,16 +117,16 @@ namespace InfiniteDraw.WorkForm
             if (draggingComponent == null)
             {
                 draggingCavans = true;
-                elements.Selected(Drawable);
+                Element.Active();
             }
             else
-                elements.Selected(draggingComponent as Drawable);
+                (draggingComponent as IDrawable)?.Active();
         }
 
         private IDraggableComponent ClickComponent(PointF location)
         {
             if (componentRegions == null)
-                componentRegions = (Drawable as IEditable)?.Components;
+                componentRegions = (Element as IEditable)?.Components;
             if (componentRegions != null)
                 foreach (var comp in componentRegions)
                     if (comp.Region.Contains(location))
@@ -136,8 +136,7 @@ namespace InfiniteDraw.WorkForm
 
         private PointF GetImageSpaceLocation(Point location)
         {
-            Matrix m = DrawingSpaceMatrix;
-            m.Invert();
+            Matrix m = Helper.DrawingToImage(offset * scalep, ClientSize);
             PointF[] loc = new PointF[] { location };
             m.TransformPoints(loc);
             loc[0].X /= (float)scalep;

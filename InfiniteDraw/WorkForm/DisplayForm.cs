@@ -1,23 +1,17 @@
-﻿using InfiniteDraw.Draw;
-using InfiniteDraw.Draw.Base;
+﻿using InfiniteDraw.Element.Draw;
 using InfiniteDraw.Utilities;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace InfiniteDraw.WorkForm
 {
-    public partial class DrawForm : DockContent
+    public partial class DisplayForm : DockContent
     {
-        private ElementStorage elements = ElementStorage.Instance;
         private Vector offset = Vector.Zero;
         private int scale = 100;
         private double scalep => scale / 100.0;
@@ -29,36 +23,24 @@ namespace InfiniteDraw.WorkForm
         private bool artValidated = false;
         private bool renderView = false;
 
-        public Drawable Drawable { private set; get; }
+        public IDrawable Element { private set; get; }
 
-        private Matrix DrawingSpaceMatrix
-        {
-            get
-            {
-                Matrix m = new Matrix();
-                m.Translate(ClientSize.Width / 2.0f, ClientSize.Height / 2.0f);
-                m.Scale(1, -1);
-                m.Translate((float)(offset.X * scalep), (float)(offset.Y * scalep));
-                return m;
-            }
-        }
-
-        public DrawForm(Drawable d)
+        public DisplayForm(IDrawable d)
         {
             InitializeComponent();
             InitializeElement(d);
             RegisterEvents();
         }
 
-        private void InitializeElement(Drawable d)
+        private void InitializeElement(IDrawable d)
         {
-            Drawable = d;
+            Element = d;
             Text = d.ToString();
         }
 
         private void RegisterEvents()
         {
-            elements.ElementModified += Elements_ElementModified;
+            Element.Modified += Element_Modified;
             MouseDown += DrawForm_MouseDown;
             MouseMove += DrawForm_MouseMove;
             MouseUp += DrawForm_MouseUp;
@@ -66,9 +48,12 @@ namespace InfiniteDraw.WorkForm
             KeyDown += DrawForm_KeyDown;
         }
 
-        private void Elements_ElementModified(object sender, ElementEventArgs e)
+        private void Element_Modified(object sender, EventArgs e)
         {
-            Text = Drawable.ToString();
+            // Do not check if is the same target
+            // because it may refer other element
+            // if other element modified, it may also modified
+            Text = Element.ToString();
             InvalidateArt(true);
         }
 
@@ -76,7 +61,7 @@ namespace InfiniteDraw.WorkForm
         {
             base.OnGotFocus(e);
 
-            elements.Selected(Drawable);
+            Element.Active();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -87,7 +72,7 @@ namespace InfiniteDraw.WorkForm
                 DrawArtImage();
             if (!adjustedCanvas.IsEmpty)
             {
-                e.Graphics.Transform = DrawingSpaceMatrix;
+                e.Graphics.Transform = Helper.ImageToDrawing(offset * scalep, ClientSize);
                 DrawAxes(e.Graphics);
                 e.Graphics.DrawImage(art, new Point(adjustedCanvas.Left, adjustedCanvas.Top));
             }
@@ -101,7 +86,8 @@ namespace InfiniteDraw.WorkForm
 
         private void DrawArtImage()
         {
-            RectangleF size = Drawable.MeasureSize(renderView ? WorkMode.Render : WorkMode.Edit);
+            WorkMode workMode = renderView ? WorkMode.Render : WorkMode.Edit;
+            RectangleF size = Element.MeasureSize(0, new Matrix(), workMode);
 
             if (size.IsEmpty)
                 return;
@@ -109,7 +95,7 @@ namespace InfiniteDraw.WorkForm
             CreateCanvas(size);
             CreateImage();
             Graphics g = CreateImageGraphics(art);
-            Drawable.Draw(g, renderView ? WorkMode.Render : WorkMode.Edit);
+            Element.Draw(g, 0, new Matrix(), workMode);
 
             artValidated = true;
         }

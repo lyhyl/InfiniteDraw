@@ -58,27 +58,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Draw\Base\Prototype.Edit.cs" />
-    <Compile Include="Draw\Base\Prototype.Property.cs" />
-    <Compile Include="Draw\Base\RefElement.Edit.cs" />
-    <Compile Include="Draw\Base\RefElement.Property.cs" />
-    <Compile Include="Draw\Bezier\Bezier3.ControlPoint.cs" />
-    <Compile Include="Draw\Bezier\Bezier3.Edit.cs" />
-    <Compile Include="Draw\Drawable.cs" />
-    <Compile Include="Draw\Base\Prototype.cs" />
-    <Compile Include="Edit\Draw\IDraggableComponent.cs" />
-    <Compile Include="Edit\Draw\IEditable.cs" />
-    <Compile Include="Draw\Base\RefElement.cs" />
-    <Compile Include="Edit\Property\ElementProperty.cs" />
-    <Compile Include="Edit\Property\IPropertyEditable.cs" />
-    <Compile Include="Draw\Bezier\BezierSolver.cs" />
-    <Compile Include="Draw\ElementStorage.cs" />
+    <Compile Include="Element\Draw\Base\Prototype.Edit.cs" />
+    <Compile Include="Element\Draw\Base\Prototype.Property.cs" />
+    <Compile Include="Element\Draw\Base\RefElement.Edit.cs" />
+    <Compile Include="Element\Draw\Base\RefElement.Property.cs" />
+    <Compile Include="Element\Draw\Bezier\Bezier3.ControlPoint.cs" />
+    <Compile Include="Element\Draw\Bezier\Bezier3.Edit.cs" />
+    <Compile Include="Element\Draw\IDrawable.cs" />
+    <Compile Include="Element\Draw\Base\Prototype.cs" />
+    <Compile Include="Element\Edit\Draw\IDraggableComponent.cs" />
+    <Compile Include="Element\Edit\Draw\IEditable.cs" />
+    <Compile Include="Element\Draw\Base\RefElement.cs" />
+    <Compile Include="Element\Edit\ElementEditor.cs" />
+    <Compile Include="Element\Edit\Property\ElementProperty.cs" />
+    <Compile Include="Element\Edit\Property\IPropertyEditable.cs" />
+    <Compile Include="Element\Draw\Bezier\BezierSolver.cs" />
+    <Compile Include="Element\Draw\ElementStorage.cs" />
+    <Compile Include="Element\IElement.cs" />
+    <Compile Include="Utilities\Helper.cs" />
     <Compile Include="Utilities\Vector.cs" />
-    <Compile Include="WorkForm\DrawForm.cs">
+    <Compile Include="WorkForm\DisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WorkForm\DrawForm.Designer.cs">
-      <DependentUpon>DrawForm.cs</DependentUpon>
+    <Compile Include="WorkForm\DisplayForm.Designer.cs">
+      <DependentUpon>DisplayForm.cs</DependentUpon>
     </Compile>
     <Compile Include="InfiniteDraw.cs">
       <SubType>Form</SubType>
@@ -88,8 +91,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Draw\Bezier\Bezier3.cs" />
-    <Compile Include="WorkForm\DrawForm.Logical.cs">
+    <Compile Include="Element\Draw\Bezier\Bezier3.cs" />
+    <Compile Include="WorkForm\DisplayForm.Logical.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WorkForm\DrawForms.cs" />
@@ -124,8 +127,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="WorkForm\DrawForm.resx">
-      <DependentUpon>DrawForm.cs</DependentUpon>
+    <EmbeddedResource Include="WorkForm\DisplayForm.resx">
+      <DependentUpon>DisplayForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WorkForm\ElementListForm.resx">
       <DependentUpon>ElementListForm.cs</DependentUpon>

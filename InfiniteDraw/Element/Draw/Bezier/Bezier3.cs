@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace InfiniteDraw.Draw.Bezier
+namespace InfiniteDraw.Element.Draw.Bezier
 {
-    public partial class Bezier3 : Drawable
+    public partial class Bezier3 : IDrawable
     {
         private partial class ControlPoint { }
 
@@ -16,8 +16,13 @@ namespace InfiniteDraw.Draw.Bezier
         private List<Vector> controlPoints = new List<Vector>();
         private List<ControlPoint> componentProxies = new List<ControlPoint>();
 
+        public int GID { set; get; }
+
         public string Name { set; get; } = defaultName;
         public int Precision { set; get; } = defaultPrecision;
+
+        public event EventHandler Modified;
+        public event EventHandler Actived;
 
         public Bezier3()
         {
@@ -29,7 +34,7 @@ namespace InfiniteDraw.Draw.Bezier
             AddControlPoint(new Vector(50, 100));
         }
 
-        public override void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
+        public void Draw(Graphics g, int depth, Matrix m, WorkMode workMode)
         {
             switch (workMode)
             {
@@ -43,6 +48,41 @@ namespace InfiniteDraw.Draw.Bezier
                 default:
                     break;
             }
+        }
+
+        public RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
+        {
+            /// TODO : Dynamic Width
+            //const float MaxWidth = 1;
+
+            if (controlPoints.Count == 0)
+                return RectangleF.Empty;
+
+            PointF[] cps = controlPoints.ConvertAll(p => p.ToPointF()).ToArray();
+            m.TransformPoints(cps);
+            float l = cps[0].X, r = cps[0].X, t = cps[0].Y, b = cps[0].Y;
+            for (int i = 1; i < cps.Length; i++)
+            {
+                l = Math.Min(l, cps[i].X);
+                r = Math.Max(r, cps[i].X);
+                t = Math.Min(t, cps[i].Y);
+                b = Math.Max(b, cps[i].Y);
+            }
+            RectangleF region = new RectangleF(l, t, r - l, b - t);
+            //region.Inflate(MaxWidth, MaxWidth);
+            return region;
+        }
+
+        public void Active()
+        {
+            Actived?.Invoke(this, new EventArgs());
+        }
+
+        public override string ToString() => Name + base.ToString();
+        
+        protected void OnModified()
+        {
+            Modified?.Invoke(this, new EventArgs());
         }
 
         private void DrawBase(Graphics g, Matrix m)
@@ -77,29 +117,6 @@ namespace InfiniteDraw.Draw.Bezier
             g.DrawRectangle(pen, box.Left, box.Top, box.Width, box.Height);
         }
 
-        public override RectangleF MeasureSize(int depth, Matrix m, WorkMode workMode)
-        {
-            /// TODO : Dynamic Width
-            const float MaxWidth = 1;
-
-            if (controlPoints.Count == 0)
-                return RectangleF.Empty;
-
-            PointF[] cps = controlPoints.ConvertAll(p => p.ToPointF()).ToArray();
-            m.TransformPoints(cps);
-            float l = cps[0].X, r = cps[0].X, t = cps[0].Y, b = cps[0].Y;
-            for (int i = 1; i < cps.Length; i++)
-            {
-                l = Math.Min(l, cps[i].X);
-                r = Math.Max(r, cps[i].X);
-                t = Math.Min(t, cps[i].Y);
-                b = Math.Max(b, cps[i].Y);
-            }
-            RectangleF region = new RectangleF(l, t, r - l, b - t);
-            //region.Inflate(MaxWidth, MaxWidth);
-            return region;
-        }
-
         private int GetPrecision()
         {
             return Precision;
@@ -109,8 +126,7 @@ namespace InfiniteDraw.Draw.Bezier
         {
             componentProxies.Add(new ControlPoint(this, controlPoints.Count));
             controlPoints.Add(position);
+            OnModified();
         }
-
-        public override string ToString() => Name + base.ToString();
     }
 }
